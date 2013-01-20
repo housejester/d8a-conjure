@@ -1,0 +1,5 @@
+# This example shows simple variables.  The template can have placeholders that represent variable data.  For example,
+# the current timestamp, or a number in a given range.
+The current time is ${type:"time",format:"yyyy-MM-dd HH:mm:ss Z"}.  Lottery numbers are:
+${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99}
+The winning color is ${type:"randomChoice", list:["Red", "Green", "Brown", "Blue", "Yellow", "Orange", "Purple", "Black", "White"]}

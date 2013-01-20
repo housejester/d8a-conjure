@@ -2,6 +2,7 @@ package io.d8a.conjure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -52,5 +53,30 @@ public class ChooseByWeightNodeList extends NodeList{
             return ((WeightedNode)node).getWeight();
         }
         return 1;
+    }
+
+    public static ChooseByWeightNodeList createNode(Map config, Conjurer conjurer) {
+        ChooseByWeightNodeList nodes = new ChooseByWeightNodeList();
+        List list = (List)config.get("list");
+        if(list != null){
+            for(Object obj : list){
+                nodes.add(parseWeightedNode(String.valueOf(obj), conjurer));
+            }
+        }
+        return nodes;
+    }
+
+    public static SampleNode parseWeightedNode(String line, Conjurer conjurer) {
+        int weight = 1;
+        int index = line.indexOf(':');
+        if(index != -1){
+            try{
+                weight = new Integer(line.substring(0, index).trim());
+                line = line.substring(index+1);
+            }catch(Exception ex){
+            }
+        }
+        SampleNode node = conjurer.parseNodes(line);
+        return new WeightedNode(node, weight);
     }
 }

@@ -1,0 +1,49 @@
+# By default, when a variable is referenced, the variable will generate a value, and return that same value to all
+# of the references to it.  This is useful for things like referring back to a value when other parts of the template
+# relate to it in some way, or you want to show the same value.  For example, if you generate an id or the current
+# timestamp, and it is displayed in more than one place, you'd want a named variable that will 'remember' the value
+# it generated.  However, sometimes you have several variables that are just the same type or have the same constraints,
+# and it gets messy to repeat those variable definitions.  For example our 'lottery numbers' are all a value between
+# 0 and 99, and we have have 5 of them repeated in the template.  It would be better to be able to have a single
+# lotteryNumber variable and just have our template reference it 5 times, and have it generate a different value for
+# each reference.  We can accomplish this by creating the named variable for 'lotteryNumber' and setting a 'remember'
+# property to false.
+${name:"sample", type:"combine", endToken:"---"}
+The current time is ${now}.  Lottery numbers are:
+
+# Here we reference the forgetful lotteryNumbers.  Note that the last reference has its own 'name' value.  This allows
+# for cases where we would like to 'remember' and refer back to a value that was generated from a non-remembering
+# variable.  Here, this means that the value generated for the 'powerball' can be remembered and referenced later.
+# The 'powerball' reference is itself a variable that will resolve as a call to 'lotteryNumber' and get a new value,
+# but then the 'powerball' variable will itself hold and 'remember' the value, and further references to the 'powerball'
+# will get that remembered value.
+${lotteryNumber},${lotteryNumber},${lotteryNumber},${lotteryNumber},${name:"powerball", ref:"lotteryNumber"}
+
+# Same goes for color here.  We'd like to pull out the colors so that the variable is easier to see and manage, but we
+# also want to remember what the winning value was to refer back to it later.
+The winning color is ${name:"winningColor", ref:"colors"}.
+Since the winner was ${winningColor}, and the power ball was ${powerball}, there ${willOrNot} be a bonus for the ${now} drawing.
+---
+
+${name:"now", type:"time", format:"yyyy-MM-dd HH:mm:ss Z"}
+
+# The lotterNumber example shows how the 'remember' property can be set to false to indicate that each time it is
+# referenced, it will generate a new number instead of 'remembering' the value that was generated for the current
+# generate call for the sample.  We reference the lotteryNumber multiple times in the base 'sample' template and
+# each reference should get a new number.
+${name:"lotteryNumber", type:"minmax", min:0, max:99, remember:false}
+
+# Each reference to colors would also generate a new color
+${name:"colors", type:"randomChoice", remember:false}
+Red
+Green
+Blue
+Yellow
+Orange
+Purple
+Black
+White
+
+${name:"willOrNot", type:"randomChoice", remember:false}
+will
+will not

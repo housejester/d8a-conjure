@@ -3,7 +3,10 @@ package io.d8a.conjure;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Test
 public class ChooseInOrderNodeListTest {
@@ -38,6 +41,19 @@ public class ChooseInOrderNodeListTest {
     public void generateFailsIfNoNodesAdded(){
         inOrder = new ChooseInOrderNodeList();
         assertEquals(generate(), "one");
+    }
+
+    public void canBeRegisteredAsType(){
+        Conjurer conjurer = new Conjurer();
+        conjurer.addNodeType("cycle", ChooseInOrderNodeList.class);
+        conjurer.addNodeTemplate("sample", "My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]");
+        assertEquals(conjurer.next(), "My favorite is [a]");
+        assertEquals(conjurer.next(), "My favorite is [b]");
+        assertEquals(conjurer.next(), "My favorite is [c]");
+
+        assertEquals(conjurer.next(), "My favorite is [a]");
+        assertEquals(conjurer.next(), "My favorite is [b]");
+        assertEquals(conjurer.next(), "My favorite is [c]");
     }
 
     private String generate() {

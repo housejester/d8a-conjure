@@ -1,0 +1,28 @@
+# When there is a variable named "sample", then Conjure will treat that node as the primary sample set to generate. So,
+# instead of repeating all lines and variables in the file, it will only repeatedly generate the named variable.  In
+# this case, we use the "combine" variable type.  With that type, Conjure will expect to either have a "list" property
+# directly specified, or it will read the following lines up to the endToken (a blank line by default) and treat them as
+# entries in the list.  Here we change the endToken so that we can have more whitespace for readability.  Blank lines
+# and comments are still ignored. Each time 'sample' is generated, the 'combine' type will simply generate each item in
+# the list in order.
+${name:"sample", type:"combine", endToken:"---"}
+The current time is ${now}.  Lottery numbers are:
+${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99}
+The winning color is ${colors}.
+---
+
+# Since the "sample" variable is now finished, other named variables can be specified independently
+${name:"now", type:"time", format:"yyyy-MM-dd HH:mm:ss Z"}
+
+# The 'colors' variable just shows that when specified independently, the randomChoice variables can also have their
+# 'list' be supplied as the non-blank lines that follow the variable definition.  When referenced, a value will be
+# chosen at random and generated.
+${name:"colors", type:"randomChoice"}
+Red
+Green
+Blue
+Yellow
+Orange
+Purple
+Black
+White

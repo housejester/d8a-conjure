@@ -87,6 +87,15 @@ public class ChooseRandomNodeListTest {
         assertEquals(generate(), "one");
     }
 
+    public void canBeRegisteredAsType(){
+        Conjurer conjurer = new Conjurer();
+        conjurer.addNodeType("randomChoice", ChooseRandomNodeList.class);
+        conjurer.addNodeTemplate("sample", "My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]");
+        String text = conjurer.next();
+        String value = text.substring(text.indexOf('[')+1, text.indexOf(']'));
+        assertTrue(Arrays.asList("a", "b", "c").contains(value));
+    }
+
     private String generate() {
         return randomOrder.generate(new StringBuilder()).toString();
     }

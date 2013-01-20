@@ -1,0 +1,11 @@
+# This example shows how variables can be named and later referenced.  By default, you can expect that the variable
+# will be generated once for each generation, and when later referencing that variable, references will be replaced
+# with the exact same value (this can be overridden to always generate a new value though; see the named-variables2.txt
+# for an example of that).
+
+# To use variable references, we first need to give variables 'names'.
+The current time is ${name:"now",type:"time",format:"yyyy-MM-dd HH:mm:ss Z"}.  Lottery numbers are:
+${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${name:"powerball",type:"minmax", min:0, max:99}
+The winning color is ${name:"winningColor", type:"randomChoice", options:["Red", "Green", "Brown", "Blue", "Yellow", "Orange", "Purple", "Black", "White"]}.
+# To reference the named variables, create a placeholder that just contains the name being referenced.
+Since the winner was ${winningColor}, and the power ball was ${powerball}, there ${type:"randomChoice",options:["will", "will not"]} be a bonus for the ${now} drawing.

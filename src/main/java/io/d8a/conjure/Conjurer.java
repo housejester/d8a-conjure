@@ -47,7 +47,7 @@ public class Conjurer {
         if(nodes.size() == 1){
             return nodes.get(0);
         }
-        return new AppendAllNodeList(nodes);
+        return new CombineNodeList(nodes);
     }
 
     public String next(String templateName) {

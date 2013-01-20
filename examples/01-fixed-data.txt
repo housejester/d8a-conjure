@@ -1,0 +1,12 @@
+# This example shows how Conjure Templates can just be raw lines that should just be repeated over and over again.
+# There are no variable snippets at all.  Conjure will simply repeat the provided lines at the specified rate.
+# (comments and blank lines are ignored)
+
+The Theory of the Moebius
+The Theory of the Moebius... When we reach that point, whatever happened will happen again.
+There is the theory of the Moebius, a twist in the fabric of space where time becomes a loop.
+Loop where time becomes a
+A loop where time becomes
+Becomes a loop where time
+Time becomes a loop where
+Where time becomes a loop
