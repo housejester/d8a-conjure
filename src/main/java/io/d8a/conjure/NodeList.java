@@ -36,7 +36,7 @@ public abstract class NodeList implements SampleNode {
             generateEmpty(buff);
             return buff;
         }
-        throw new IllegalStateException("Nodes must first be added to "+getClass().getSimpleName()+" before calling exhaust.");
+        throw new IllegalStateException("Nodes must first be added to "+getClass().getSimpleName()+" before calling generate.");
     }
 
     protected void generateEmpty(StringBuilder buff){

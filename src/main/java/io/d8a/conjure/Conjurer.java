@@ -90,6 +90,20 @@ public class Conjurer {
         return nodeType.getMethod("createNode", Map.class);
     }
 
+    public Map parseFirstConfig(String text){
+        Snippet refSnip = findRef(text);
+        if(refSnip == null){
+            return Collections.emptyMap();
+        }
+        String ref = text.substring(refSnip.start + refOpenToken.length(), refSnip.stop).trim();
+        try{
+            return json.readValue("{"+ref+"}", Map.class);
+        }catch(Exception ex){
+        }
+        return Collections.emptyMap();
+
+    }
+
     private List<SampleNode> compileToNodeList(String text) {
         List<SampleNode> nodes = new ArrayList<SampleNode>();
         Snippet refSnip = findRef(text);
