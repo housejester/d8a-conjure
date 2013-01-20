@@ -23,12 +23,12 @@ public class DateNodeTypeTest {
         Clock clock = new SimulatedClock(randTime);
 
         samples = new Conjurer(clock);
-        samples.addNodeType("date", DateNode.class);
+        samples.addNodeType("date", TimeNode.class);
     }
 
     public void generatesSystemTimestamp(){
         samples = new Conjurer();
-        samples.addNodeType("date", DateNode.class);
+        samples.addNodeType("date", TimeNode.class);
         samples.addNodeTemplate("sample", "The current time is [${type:\"date\"}].");
 
         long start = System.currentTimeMillis();

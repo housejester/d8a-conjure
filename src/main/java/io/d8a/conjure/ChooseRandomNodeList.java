@@ -1,12 +1,11 @@
 package io.d8a.conjure;
 
-import java.util.List;
 import java.util.Random;
 
 public class ChooseRandomNodeList extends NodeList {
     private static final Random RAND = new Random();
 
-    protected void generateNonEmpty(StringBuilder buff, List<SampleNode> nodes){
+    protected void generateNonEmpty(StringBuilder buff){
         nodes.get(RAND.nextInt(nodes.size())).generate(buff);
     }
 }

@@ -1,12 +1,10 @@
 package io.d8a.conjure;
 
-import java.util.List;
-
 public class ChooseInOrderNodeList extends NodeList {
     private int next = 0;
 
     @Override
-    protected void generateNonEmpty(StringBuilder buff, List<SampleNode> nodes){
+    protected void generateNonEmpty(StringBuilder buff){
         if(next >= nodes.size()){
             next = 0;
         }

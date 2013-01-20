@@ -13,7 +13,7 @@ public class AppendAllNodeList extends NodeList {
     }
 
     @Override
-    protected void generateNonEmpty(StringBuilder buff, List<SampleNode> nodes){
+    protected void generateNonEmpty(StringBuilder buff){
         for(SampleNode node : nodes){
             node.generate(buff);
         }

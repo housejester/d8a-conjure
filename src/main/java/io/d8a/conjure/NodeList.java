@@ -3,7 +3,7 @@ package io.d8a.conjure;
 import java.util.*;
 
 public abstract class NodeList implements SampleNode {
-    private List<SampleNode> nodes = new ArrayList<SampleNode>();
+    protected List<SampleNode> nodes = new ArrayList<SampleNode>();
     private boolean allowsGenerateOnEmpty = false;
 
     public NodeList(){
@@ -29,7 +29,7 @@ public abstract class NodeList implements SampleNode {
     @Override
     public StringBuilder generate(StringBuilder buff) {
         if(!nodes.isEmpty()){
-            generateNonEmpty(buff, nodes);
+            generateNonEmpty(buff);
             return buff;
         }
         if(allowsGenerateOnEmpty){
@@ -42,5 +42,5 @@ public abstract class NodeList implements SampleNode {
     protected void generateEmpty(StringBuilder buff){
     }
 
-    protected abstract void generateNonEmpty(StringBuilder buff, List<SampleNode> nodes);
+    protected abstract void generateNonEmpty(StringBuilder buff);
 }

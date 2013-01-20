@@ -6,15 +6,15 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Map;
 
-public class DateNode implements SampleNode {
+public class TimeNode implements SampleNode {
     private final Clock clock;
     private final DateNodeFormatter format;
 
-    public DateNode(final Clock clock, final String format){
+    public TimeNode(final Clock clock, final String format){
         this(clock, format, DateTimeZone.getDefault().getID());
     }
 
-    public DateNode(final Clock clock, final String format, final String timeZone){
+    public TimeNode(final Clock clock, final String format, final String timeZone){
         this.clock = clock;
         if("millis".equals(format)){
             this.format = new DateNodeFormatter() {
@@ -51,9 +51,9 @@ public class DateNode implements SampleNode {
         Jitter jitter = createJitter(config, conjurer);
         Clock clock = new JitterClock(conjurer.getClock(), jitter);
         if(timezone != null){
-            return new DateNode(clock, format, timezone);
+            return new TimeNode(clock, format, timezone);
         }
-        return new DateNode(clock, format);
+        return new TimeNode(clock, format);
     }
 
     private static Jitter createJitter(Map config, Conjurer conjurer) {
