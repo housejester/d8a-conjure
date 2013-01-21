@@ -43,4 +43,8 @@ public abstract class NodeList implements SampleNode {
     }
 
     protected abstract void generateNonEmpty(StringBuilder buff);
+
+    public boolean isEmpty() {
+        return nodes == null || nodes.isEmpty();
+    }
 }

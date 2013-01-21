@@ -18,30 +18,20 @@ public class ConjureTemplateParserFixedDataTest {
         assertEquals(conjurer.next(), "single line");
     }
 
-    public void multipleFixedLinesCycle() throws IOException {
+    public void multipleFixedLinesAllCombineEachCall() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
         Conjurer conjurer = parser.parse( toInputStream("line 1\nline 2\nline 3") );
 
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
-
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
     }
 
     public void ignoresBlankLines() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
         Conjurer conjurer = parser.parse( toInputStream("\n\n\nline 1\n   \nline 2\n\t\t\nline 3") );
 
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
-
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
 
     }
 
@@ -49,13 +39,8 @@ public class ConjureTemplateParserFixedDataTest {
         ConjureTemplateParser parser = new ConjureTemplateParser();
         Conjurer conjurer = parser.parse( toInputStream("line 1\n# Ignore me\nline 2\n\t\t# Ignore me too\nline 3") );
 
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
-
-        assertEquals(conjurer.next(), "line 1");
-        assertEquals(conjurer.next(), "line 2");
-        assertEquals(conjurer.next(), "line 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
+        assertEquals(conjurer.next(), "line 1\nline 2\nline 3");
     }
 
     private InputStream toInputStream(String text) {

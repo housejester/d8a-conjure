@@ -13,6 +13,16 @@ import static org.testng.Assert.assertTrue;
 
 @Test
 public class ConjureTemplateParserVariablesTest {
+    public void linesCanHaveVariablesAndStillCombinesAllEachCall() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        Conjurer conjurer = parser.parse(toInputStream(
+            "First value ${type:\"io.d8a.conjure.MinMaxNode\",min:20,max:20}.\n"+
+            "Second value ${type:\"io.d8a.conjure.MinMaxNode\",min:30,max:30}.\n"
+        ));
+        assertEquals(conjurer.next(), "First value 20.\nSecond value 30.");
+        assertEquals(conjurer.next(), "First value 20.\nSecond value 30.");
+    }
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void failsForUnregisteredVariableTypes() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();

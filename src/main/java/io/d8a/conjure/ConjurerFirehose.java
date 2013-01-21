@@ -6,9 +6,7 @@ import org.apache.commons.cli.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ConjurerFirehose implements Runnable{
     private static final Random RAND = new Random();
@@ -121,13 +119,17 @@ public class ConjurerFirehose implements Runnable{
         long lastReport = start;
         long bytesWritten = 0L;
         String lastLinePrinted = "";
+        Iterator<String> linesIterator = null;
 
         for(long i=0 ;i<maxLines && clock.currentTimeMillis()<stopTime; i++){
             throttle(start, i, linesPerMs);
             if(Thread.currentThread().isInterrupted()){
                 return;
             }
-            String str = genLine();
+            if(linesIterator == null || !linesIterator.hasNext()){
+                linesIterator = conjureNextBatch();
+            }
+            String str = linesIterator.next();
             bytesWritten += str.length();
             printer.print(str);
             lastLinePrinted = str;
@@ -140,11 +142,11 @@ public class ConjurerFirehose implements Runnable{
         report(start, count, lastLinePrinted, bytesWritten);
     }
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    private String genLine() {
-        return conjurer.next();
+    private Iterator<String> conjureNextBatch() {
+        return Arrays.asList(conjurer.next().split("\n")).iterator();
     }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     private String genLineHardcode() {
         Map<String, Object> map = new HashMap<String, Object>();
