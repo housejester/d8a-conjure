@@ -13,8 +13,8 @@ To use Conjure, you first need to create a template to show Conjure what your da
 Run
 The Conjurer will generate data using your template at the rate you specify.  To fire up the conjurer run:
 bin/conjure examples/01-fixed-data.txt
-That will run the generator for the simple-template.txt template, conjuring up data at 10 samples per second.
+That will run the generator for the simple-template.txt template, conjuring up data at 10 lines per second.
 You can also specify the rate:
 bin/conjure -rate 100 examples/01-fixed-data.txt
-Will generate at 100 samples per second.
+Will generate at 100 lines per second.
 See the Conjurer page for more options.
