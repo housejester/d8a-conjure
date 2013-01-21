@@ -8,7 +8,7 @@
 # lotteryNumber variable and just have our template reference it 5 times, and have it generate a different value for
 # each reference.  We can accomplish this by creating the named variable for 'lotteryNumber' and setting a 'remember'
 # property to false.
-${name:"sample", type:"combine", endToken:"---", separator:"\n"}
+${name:"sample", type:"combine", endToken:"---", separator:" "}
 The current time is ${now}.  Lottery numbers are:
 
 # Here we reference the forgetful lotteryNumbers.  Note that the last reference has its own 'name' value.  This allows

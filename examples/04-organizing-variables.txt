@@ -5,7 +5,7 @@
 # entries in the list.  Here we change the endToken so that we can have more whitespace for readability.  Blank lines
 # and comments are still ignored. Each time 'sample' is generated, the 'combine' type will simply generate each item in
 # the list in order.
-${name:"sample", type:"combine", endToken:"---"}
+${name:"sample", type:"combine", endToken:"---", separator:" "}
 The current time is ${now}.  Lottery numbers are:
 ${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99},${type:"minmax", min:0, max:99}
 The winning color is ${colors}.
