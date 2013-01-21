@@ -3,8 +3,6 @@ package io.d8a.conjure;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -29,7 +27,7 @@ public class ChooseInOrderNodeListTest {
     }
 
     public void canBeReferencedInSampleGenerator(){
-        Conjurer generator = new Conjurer();
+        ConjureTemplate generator = new ConjureTemplate();
         generator.addNode("order", inOrder);
         generator.addNodeTemplate("sample", "Answer is: ${order}.");
         assertEquals(generator.next(), "Answer is: one.");
@@ -44,16 +42,16 @@ public class ChooseInOrderNodeListTest {
     }
 
     public void canBeRegisteredAsType(){
-        Conjurer conjurer = new Conjurer();
-        conjurer.addNodeType("cycle", ChooseInOrderNodeList.class);
-        conjurer.addNodeTemplate("sample", "My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]");
-        assertEquals(conjurer.next(), "My favorite is [a]");
-        assertEquals(conjurer.next(), "My favorite is [b]");
-        assertEquals(conjurer.next(), "My favorite is [c]");
+        ConjureTemplate template = new ConjureTemplate();
+        template.addNodeType("cycle", ChooseInOrderNodeList.class);
+        template.addNodeTemplate("sample", "My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]");
+        assertEquals(template.next(), "My favorite is [a]");
+        assertEquals(template.next(), "My favorite is [b]");
+        assertEquals(template.next(), "My favorite is [c]");
 
-        assertEquals(conjurer.next(), "My favorite is [a]");
-        assertEquals(conjurer.next(), "My favorite is [b]");
-        assertEquals(conjurer.next(), "My favorite is [c]");
+        assertEquals(template.next(), "My favorite is [a]");
+        assertEquals(template.next(), "My favorite is [b]");
+        assertEquals(template.next(), "My favorite is [c]");
     }
 
     private String generate() {

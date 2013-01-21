@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class Conjurer {
+public class ConjureTemplate {
     private Map<String, SampleNode> nodes;
     private Map<String, Method> typeRegistry;
     private Clock clock;
@@ -19,15 +19,15 @@ public class Conjurer {
         json.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
 
-    public Conjurer() {
+    public ConjureTemplate() {
         this(Clock.SYSTEM_CLOCK);
     }
 
-    public Conjurer(Clock clock) {
+    public ConjureTemplate(Clock clock) {
         this(clock, "${", "}");
     }
 
-    public Conjurer(Clock clock, String openToken, String closeToken) {
+    public ConjureTemplate(Clock clock, String openToken, String closeToken) {
         this.clock = clock;
         nodes = new HashMap<String, SampleNode>();
         typeRegistry = new HashMap<String, Method>();
@@ -85,14 +85,14 @@ public class Conjurer {
         try {
             creator = lookupCreatorMethod(nodeType);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Could not find creator method for class '"+nodeType+"'.  Needs to have a static method called 'createNode' that takes Map,Conjurer, or just a Map.");
+            throw new IllegalArgumentException("Could not find creator method for class '"+nodeType+"'.  Needs to have a static method called 'createNode' that takes Map,ConjureTemplate, or just a Map.");
         }
         typeRegistry.put(typeName, creator);
     }
 
     private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException {
         try {
-            return nodeType.getMethod("createNode", Map.class, Conjurer.class);
+            return nodeType.getMethod("createNode", Map.class, ConjureTemplate.class);
         } catch (NoSuchMethodException e) {
         }
         return nodeType.getMethod("createNode", Map.class);
@@ -179,7 +179,7 @@ public class Conjurer {
         return typeRegistry.get(typeName);
     }
 
-    private SampleNode createNodeFromMethod(String typeName, Method creator, Map config, Conjurer generator) {
+    private SampleNode createNodeFromMethod(String typeName, Method creator, Map config, ConjureTemplate generator) {
         Object[] args = new Object[creator.getParameterTypes().length];
         args[0] = config;
         if(args.length > 1){

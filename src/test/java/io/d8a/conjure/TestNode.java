@@ -14,7 +14,7 @@ class TestNode implements SampleNode {
         return buff.append(text);
     }
 
-    public static SampleNode createNode(final Map config, final Conjurer generator){
+    public static SampleNode createNode(final Map config, final ConjureTemplate generator){
         if(config.containsKey("value")){
             return new TestNode(config.get("value"));
         }

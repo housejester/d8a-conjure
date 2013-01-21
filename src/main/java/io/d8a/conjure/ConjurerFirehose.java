@@ -18,7 +18,7 @@ public class ConjurerFirehose implements Runnable{
     private final long maxLines;
     private String filePath;
     private long count = 0;
-    private Conjurer conjurer;
+    private ConjureTemplate template;
 
     public ConjurerFirehose(long stopTime, Printer printer, int linesPerSec, String filePath){
         this(-1, stopTime, printer, linesPerSec, Long.MAX_VALUE, filePath);
@@ -41,9 +41,9 @@ public class ConjurerFirehose implements Runnable{
         }
         ConjureTemplateParser parser = new ConjureTemplateParser(clock);
         try {
-            this.conjurer = parser.parse(new FileInputStream(filePath));
+            this.template = parser.parse(new FileInputStream(filePath));
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not create Conjurer from "+filePath, e);
+            throw new IllegalArgumentException("Could not create ConjureTemplate from "+filePath, e);
         }
     }
 
@@ -143,7 +143,7 @@ public class ConjurerFirehose implements Runnable{
     }
 
     private Iterator<String> conjureNextBatch() {
-        return Arrays.asList(conjurer.next().split("\n")).iterator();
+        return Arrays.asList(template.next().split("\n")).iterator();
     }
 
     private static final ObjectMapper mapper = new ObjectMapper();

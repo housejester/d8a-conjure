@@ -11,12 +11,12 @@ public class ChooseRandomNodeList extends NodeList {
         nodes.get(RAND.nextInt(nodes.size())).generate(buff);
     }
 
-    public static ChooseRandomNodeList createNode(Map config, Conjurer conjurer) {
+    public static ChooseRandomNodeList createNode(Map config, ConjureTemplate template) {
         ChooseRandomNodeList nodes = new ChooseRandomNodeList();
         List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
-                nodes.add(conjurer.parseNodes(String.valueOf(obj)));
+                nodes.add(template.parseNodes(String.valueOf(obj)));
             }
         }
         return nodes;

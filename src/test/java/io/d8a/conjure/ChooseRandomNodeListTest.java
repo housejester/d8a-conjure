@@ -68,7 +68,7 @@ public class ChooseRandomNodeListTest {
     }
 
     public void canBeReferencedInSampleGenerator(){
-        Conjurer generator = new Conjurer();
+        ConjureTemplate generator = new ConjureTemplate();
         generator.addNode("random", randomOrder);
         generator.addNodeTemplate("sample", "Answer is: [${random}].");
         Set<Integer> values = new HashSet<Integer>();
@@ -88,10 +88,10 @@ public class ChooseRandomNodeListTest {
     }
 
     public void canBeRegisteredAsType(){
-        Conjurer conjurer = new Conjurer();
-        conjurer.addNodeType("randomChoice", ChooseRandomNodeList.class);
-        conjurer.addNodeTemplate("sample", "My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]");
-        String text = conjurer.next();
+        ConjureTemplate template = new ConjureTemplate();
+        template.addNodeType("randomChoice", ChooseRandomNodeList.class);
+        template.addNodeTemplate("sample", "My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]");
+        String text = template.next();
         String value = text.substring(text.indexOf('[')+1, text.indexOf(']'));
         assertTrue(Arrays.asList("a", "b", "c").contains(value));
     }

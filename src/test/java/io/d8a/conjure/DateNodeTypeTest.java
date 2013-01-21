@@ -14,7 +14,7 @@ import static org.testng.Assert.assertTrue;
 @Test
 public class DateNodeTypeTest {
     private static final Random RAND = new Random();
-    private Conjurer samples;
+    private ConjureTemplate samples;
     private long randTime;
 
     @BeforeMethod
@@ -22,12 +22,12 @@ public class DateNodeTypeTest {
         randTime = Math.abs(RAND.nextLong());
         Clock clock = new SimulatedClock(randTime);
 
-        samples = new Conjurer(clock);
+        samples = new ConjureTemplate(clock);
         samples.addNodeType("date", TimeNode.class);
     }
 
     public void generatesSystemTimestamp(){
-        samples = new Conjurer();
+        samples = new ConjureTemplate();
         samples.addNodeType("date", TimeNode.class);
         samples.addNodeTemplate("sample", "The current time is [${type:\"date\"}].");
 

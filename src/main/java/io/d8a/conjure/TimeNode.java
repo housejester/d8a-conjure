@@ -42,51 +42,51 @@ public class TimeNode implements SampleNode {
         return buff;
     }
 
-    public static SampleNode createNode(Map config, Conjurer conjurer) {
+    public static SampleNode createNode(Map config, ConjureTemplate template) {
         String format = (String)config.get("format");
         if(format == null){
             format = "millis";
         }
         String timezone = (String) config.get("timezone");
-        Jitter jitter = createJitter(config, conjurer);
-        Clock clock = new JitterClock(conjurer.getClock(), jitter);
+        Jitter jitter = createJitter(config, template);
+        Clock clock = new JitterClock(template.getClock(), jitter);
         if(timezone != null){
             return new TimeNode(clock, format, timezone);
         }
         return new TimeNode(clock, format);
     }
 
-    private static Jitter createJitter(Map config, Conjurer conjurer) {
+    private static Jitter createJitter(Map config, ConjureTemplate template) {
         if(config.containsKey("min") || config.containsKey("max")){
             return MinMaxNode.createNode(config).getMinmax();
         }
         if(config.containsKey("minmaxRef")){
             final String jitterRefName = (String) config.get("minmaxRef");
-            MinMaxNode minmaxNode = (MinMaxNode)conjurer.getNode(jitterRefName);
+            MinMaxNode minmaxNode = (MinMaxNode) template.getNode(jitterRefName);
             if(minmaxNode != null){
                 return minmaxNode.getMinmax();
             }
-            return new LazyJitter(jitterRefName, conjurer);
+            return new LazyJitter(jitterRefName, template);
         }
         return Jitter.NO_JITTER;
     }
 
     private static class LazyJitter implements Jitter{
         private String refName;
-        private Conjurer conjurer;
+        private ConjureTemplate template;
         private MinMax minmax;
 
-        private LazyJitter(String refName, Conjurer conjurer) {
+        private LazyJitter(String refName, ConjureTemplate template) {
             this.refName = refName;
-            this.conjurer = conjurer;
+            this.template = template;
         }
 
         @Override
         public long nextValue() {
             if(minmax == null){
-                MinMaxNode myNode = (MinMaxNode) conjurer.getNode(refName);
+                MinMaxNode myNode = (MinMaxNode) template.getNode(refName);
                 if(myNode == null){
-                    throw new IllegalArgumentException("Node '"+refName+"' not found in the conjurer.");
+                    throw new IllegalArgumentException("Node '"+refName+"' not found in the template.");
                 }
                 minmax = myNode.getMinmax();
             }

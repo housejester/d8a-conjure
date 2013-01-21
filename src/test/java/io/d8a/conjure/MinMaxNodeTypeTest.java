@@ -12,11 +12,11 @@ import static org.testng.Assert.assertTrue;
 
 @Test
 public class MinMaxNodeTypeTest {
-    private Conjurer samples;
+    private ConjureTemplate samples;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        samples = new Conjurer();
+        samples = new ConjureTemplate();
         samples.addNodeType("minmax", MinMaxNode.class);
     }
 

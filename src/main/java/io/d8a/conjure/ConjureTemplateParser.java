@@ -1,7 +1,5 @@
 package io.d8a.conjure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,27 +7,27 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 public class ConjureTemplateParser {
-    Conjurer conjurer;
+    ConjureTemplate template;
 
     public ConjureTemplateParser(){
         this(Clock.SYSTEM_CLOCK);
     }
 
     public ConjureTemplateParser(Clock clock) {
-        conjurer = new Conjurer(clock);
+        template = new ConjureTemplate(clock);
         registerStandardTypes();
     }
 
     private void registerStandardTypes() {
-        conjurer.addNodeType("time", TimeNode.class);
-        conjurer.addNodeType("minmax", MinMaxNode.class);
-        conjurer.addNodeType("randomChoice", ChooseRandomNodeList.class);
-        conjurer.addNodeType("cycle", ChooseInOrderNodeList.class);
-        conjurer.addNodeType("combine", CombineNodeList.class);
-        conjurer.addNodeType("weighted", ChooseByWeightNodeList.class);
+        template.addNodeType("time", TimeNode.class);
+        template.addNodeType("minmax", MinMaxNode.class);
+        template.addNodeType("randomChoice", ChooseRandomNodeList.class);
+        template.addNodeType("cycle", ChooseInOrderNodeList.class);
+        template.addNodeType("combine", CombineNodeList.class);
+        template.addNodeType("weighted", ChooseByWeightNodeList.class);
     }
 
-    public Conjurer parse(InputStream inputStream) throws IOException {
+    public ConjureTemplate parse(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         NodeList currentNodeList = null;
@@ -40,13 +38,13 @@ public class ConjureTemplateParser {
                 currentNodeList = null;
                 endToken = "";
             }else if(!isBlank(line)){
-                SampleNode node = conjurer.parseNodes(line);
+                SampleNode node = template.parseNodes(line);
                 NodeList nodeAsNodeList = unwrapNodeList(node);
                 if(currentNodeList != null){
                     currentNodeList.add(node);
                 }else if(nodeAsNodeList != null && nodeAsNodeList.isEmpty()){
                     currentNodeList = nodeAsNodeList;
-                    endToken = parseEndToken(line, conjurer);
+                    endToken = parseEndToken(line, template);
                     list.add(node);
                 } else {
                     list.add(node);
@@ -54,10 +52,10 @@ public class ConjureTemplateParser {
             }
             line = reader.readLine();
         }
-        if(conjurer.getNode("sample") == null){
-            conjurer.addNode("sample", list);
+        if(template.getNode("sample") == null){
+            template.addNode("sample", list);
         }
-        return conjurer;
+        return template;
     }
 
     private NodeList unwrapNodeList(SampleNode node) {
@@ -79,8 +77,8 @@ public class ConjureTemplateParser {
         return node;
     }
 
-    private String parseEndToken(String line, Conjurer conjurer) {
-        Map config = conjurer.parseFirstConfig(line);
+    private String parseEndToken(String line, ConjureTemplate template) {
+        Map config = template.parseFirstConfig(line);
         if(config.containsKey("endToken")){
             return (String)config.get("endToken");
         }

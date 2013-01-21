@@ -14,12 +14,12 @@ public class ChooseInOrderNodeList extends NodeList {
         nodes.get(next++).generate(buff);
     }
 
-    public static ChooseInOrderNodeList createNode(Map config, Conjurer conjurer) {
+    public static ChooseInOrderNodeList createNode(Map config, ConjureTemplate template) {
         ChooseInOrderNodeList nodes = new ChooseInOrderNodeList();
         List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
-                nodes.add(conjurer.parseNodes(String.valueOf(obj)));
+                nodes.add(template.parseNodes(String.valueOf(obj)));
             }
         }
         return nodes;

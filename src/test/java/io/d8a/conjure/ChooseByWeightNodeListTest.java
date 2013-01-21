@@ -148,16 +148,16 @@ public class ChooseByWeightNodeListTest {
     }
 
     public void canBeRegisteredAsType(){
-        Conjurer conjurer = new Conjurer();
-        conjurer.addNodeType("weighted", ChooseByWeightNodeList.class);
-        conjurer.addNodeTemplate("sample", "My favorite is [${type:\"weighted\", list:[\"10:a\",\"20:b\",\"70:c\"], separator:\",\"}]");
-        CombineNodeList sampleNodes = (CombineNodeList)conjurer.getNode("sample");
+        ConjureTemplate template = new ConjureTemplate();
+        template.addNodeType("weighted", ChooseByWeightNodeList.class);
+        template.addNodeTemplate("sample", "My favorite is [${type:\"weighted\", list:[\"10:a\",\"20:b\",\"70:c\"], separator:\",\"}]");
+        CombineNodeList sampleNodes = (CombineNodeList) template.getNode("sample");
         ChooseByWeightNodeList weightedNodes = (ChooseByWeightNodeList)sampleNodes.getNodes().get(1);
         assertEquals(((WeightedNode)weightedNodes.getNodes().get(0)).getWeight(), 10);
         assertEquals(((WeightedNode)weightedNodes.getNodes().get(1)).getWeight(), 20);
         assertEquals(((WeightedNode) weightedNodes.getNodes().get(2)).getWeight(), 70);
 
-        String text = conjurer.next();
+        String text = template.next();
         String fav = text.substring(text.indexOf('[')+1, text.indexOf(']'));
         assertTrue(Arrays.asList("a", "b", "c").contains(fav));
     }

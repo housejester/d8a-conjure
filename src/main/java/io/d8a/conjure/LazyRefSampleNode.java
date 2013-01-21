@@ -3,17 +3,17 @@ package io.d8a.conjure;
 public class LazyRefSampleNode implements SampleNode{
     private String ref;
     private SampleNode refNode;
-    private Conjurer conjurer;
+    private ConjureTemplate template;
 
-    public LazyRefSampleNode(String ref, Conjurer conjurer) {
+    public LazyRefSampleNode(String ref, ConjureTemplate template) {
         this.ref = ref;
-        this.conjurer = conjurer;
+        this.template = template;
     }
 
     @Override
     public StringBuilder generate(StringBuilder buff) {
         if(refNode == null){
-            refNode = conjurer.getNode(ref);
+            refNode = template.getNode(ref);
             if(refNode == null){
                 throw new IllegalArgumentException("Referenced node '"+ref+"' not found.");
             }

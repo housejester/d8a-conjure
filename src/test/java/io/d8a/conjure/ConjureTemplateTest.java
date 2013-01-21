@@ -11,15 +11,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 @Test
-public class ConjurerTest {
+public class ConjureTemplateTest {
     private static final Random RAND = new Random();
 
-    private Conjurer samples;
+    private ConjureTemplate samples;
     private long rand;
 
     @BeforeMethod
     public void setUp() {
-        samples = new Conjurer();
+        samples = new ConjureTemplate();
         rand = RAND.nextLong();
     }
 
@@ -147,7 +147,7 @@ public class ConjurerTest {
     }
 
     public void supportsCustomRefDelimiters(){
-        samples = new Conjurer(Clock.SYSTEM_CLOCK, "[[[", "]]]");
+        samples = new ConjureTemplate(Clock.SYSTEM_CLOCK, "[[[", "]]]");
         samples.addNodeTemplate("sample", "Hello, [[[other]]]!");
         samples.addNodeTemplate("other", "World");
 

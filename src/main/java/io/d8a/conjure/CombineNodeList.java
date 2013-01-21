@@ -37,13 +37,13 @@ public class CombineNodeList extends NodeList {
         }
     }
 
-    public static CombineNodeList createNode(Map config, Conjurer conjurer) {
+    public static CombineNodeList createNode(Map config, ConjureTemplate template) {
         String separator = (String)config.get("separator");
         CombineNodeList nodes = new CombineNodeList(separator);
         List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
-                nodes.add(conjurer.parseNodes(String.valueOf(obj)));
+                nodes.add(template.parseNodes(String.valueOf(obj)));
             }
         }
         return nodes;

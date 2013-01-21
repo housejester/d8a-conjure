@@ -15,32 +15,32 @@ import static org.testng.Assert.assertTrue;
 public class ConjureTemplateParserVariablesTest {
     public void linesCanHaveVariablesAndStillCombinesAllEachCall() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream(
+        ConjureTemplate template = parser.parse(toInputStream(
             "First value ${type:\"io.d8a.conjure.MinMaxNode\",min:20,max:20}.\n"+
             "Second value ${type:\"io.d8a.conjure.MinMaxNode\",min:30,max:30}.\n"
         ));
-        assertEquals(conjurer.next(), "First value 20.\nSecond value 30.");
-        assertEquals(conjurer.next(), "First value 20.\nSecond value 30.");
+        assertEquals(template.next(), "First value 20.\nSecond value 30.");
+        assertEquals(template.next(), "First value 20.\nSecond value 30.");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void failsForUnregisteredVariableTypes() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("The current time is ${type:\"badname\"}"));
+        ConjureTemplate template = parser.parse(toInputStream("The current time is ${type:\"badname\"}"));
     }
 
     public void succeedsForFullyQualifiedTypes() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("The current time is ${type:\"io.d8a.conjure.MinMaxNode\",\"min\":10,\"max\":10}"));
-        assertEquals(conjurer.next(), "The current time is 10");
+        ConjureTemplate template = parser.parse(toInputStream("The current time is ${type:\"io.d8a.conjure.MinMaxNode\",\"min\":10,\"max\":10}"));
+        assertEquals(template.next(), "The current time is 10");
     }
 
     public void timeRegisteredByDefault() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
         long start = System.currentTimeMillis();
-        Conjurer conjurer = parser.parse(toInputStream("The current time is [${type:\"time\"}]"));
+        ConjureTemplate template = parser.parse(toInputStream("The current time is [${type:\"time\"}]"));
         long stop = System.currentTimeMillis();
-        String text = conjurer.next();
+        String text = template.next();
         long time = parseLong(text);
 
         assertTrue( time >= start);
@@ -52,48 +52,48 @@ public class ConjureTemplateParserVariablesTest {
     public void canSpecifyCustomClock() throws IOException {
         long rand = RAND.nextLong();
         ConjureTemplateParser parser = new ConjureTemplateParser(new SimulatedClock(rand));
-        Conjurer conjurer = parser.parse(toInputStream("The current time is [${type:\"time\"}]"));
-        assertEquals(conjurer.next(), "The current time is ["+rand+"]");
+        ConjureTemplate template = parser.parse(toInputStream("The current time is [${type:\"time\"}]"));
+        assertEquals(template.next(), "The current time is ["+rand+"]");
     }
 
     public void minMaxRegisteredByDefault() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("The current time is ${type:\"minmax\",\"min\":10,\"max\":10}"));
-        assertEquals(conjurer.next(), "The current time is 10");
+        ConjureTemplate template = parser.parse(toInputStream("The current time is ${type:\"minmax\",\"min\":10,\"max\":10}"));
+        assertEquals(template.next(), "The current time is 10");
     }
 
     public void randomChoiceRegisteredByDefault() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]"));
-        String text = conjurer.next();
+        ConjureTemplate template = parser.parse(toInputStream("My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]"));
+        String text = template.next();
         String value = text.substring(text.indexOf('[') + 1, text.indexOf(']'));
         assertTrue(Arrays.asList("a", "b", "c").contains(value));
     }
 
     public void cycleRegisteredByDefault() throws IOException{
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]"));
-        assertEquals(conjurer.next(), "My favorite is [a]");
-        assertEquals(conjurer.next(), "My favorite is [b]");
-        assertEquals(conjurer.next(), "My favorite is [c]");
+        ConjureTemplate template = parser.parse(toInputStream("My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]"));
+        assertEquals(template.next(), "My favorite is [a]");
+        assertEquals(template.next(), "My favorite is [b]");
+        assertEquals(template.next(), "My favorite is [c]");
 
-        assertEquals(conjurer.next(), "My favorite is [a]");
-        assertEquals(conjurer.next(), "My favorite is [b]");
-        assertEquals(conjurer.next(), "My favorite is [c]");
+        assertEquals(template.next(), "My favorite is [a]");
+        assertEquals(template.next(), "My favorite is [b]");
+        assertEquals(template.next(), "My favorite is [c]");
 
     }
 
     public void combineRegisteredByDefault() throws IOException{
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"]}]"));
-        assertEquals(conjurer.next(), "My favorite is [abc]");
-        assertEquals(conjurer.next(), "My favorite is [abc]");
+        ConjureTemplate template = parser.parse(toInputStream("My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"]}]"));
+        assertEquals(template.next(), "My favorite is [abc]");
+        assertEquals(template.next(), "My favorite is [abc]");
     }
 
     public void weightedRegisteredByDefault() throws IOException{
         ConjureTemplateParser parser = new ConjureTemplateParser();
-        Conjurer conjurer = parser.parse(toInputStream("My favorite is [${type:\"weighted\", list:[\"10:a\",\"20:b\",\"70:c\"]}]"));
-        String text = conjurer.next();
+        ConjureTemplate template = parser.parse(toInputStream("My favorite is [${type:\"weighted\", list:[\"10:a\",\"20:b\",\"70:c\"]}]"));
+        String text = template.next();
         String fav = text.substring(text.indexOf('[')+1, text.indexOf(']'));
         assertTrue(Arrays.asList("a", "b", "c").contains(fav));
     }

@@ -55,18 +55,18 @@ public class ChooseByWeightNodeList extends NodeList{
         return 1;
     }
 
-    public static ChooseByWeightNodeList createNode(Map config, Conjurer conjurer) {
+    public static ChooseByWeightNodeList createNode(Map config, ConjureTemplate template) {
         ChooseByWeightNodeList nodes = new ChooseByWeightNodeList();
         List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
-                nodes.add(parseWeightedNode(String.valueOf(obj), conjurer));
+                nodes.add(parseWeightedNode(String.valueOf(obj), template));
             }
         }
         return nodes;
     }
 
-    public static SampleNode parseWeightedNode(String line, Conjurer conjurer) {
+    public static SampleNode parseWeightedNode(String line, ConjureTemplate template) {
         int weight = 1;
         int index = line.indexOf(':');
         if(index != -1){
@@ -76,7 +76,7 @@ public class ChooseByWeightNodeList extends NodeList{
             }catch(Exception ex){
             }
         }
-        SampleNode node = conjurer.parseNodes(line);
+        SampleNode node = template.parseNodes(line);
         return new WeightedNode(node, weight);
     }
 }
