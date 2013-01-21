@@ -1,6 +1,6 @@
 Conjure
 
-Conjure is a data generator.  You'd use Conjure any time you need to generate a lot of test data.
+Conjure is a data generator.  You'd use Conjure any time you need to generate a lot of test data.  It can generate piles of data on disk, or emit to kafka queues as a realtime firehose simulator.
 
 Building
 Conjure is built with maven, so the standard
@@ -8,16 +8,13 @@ mvn clean install
 will get you a self contained artifact in target/d8a-conjure-*.jar
 
 Configure
-To use Conjure, you first need to create a template to show Conjure what your data looks like.  The template is a simple
-DSL that tries to be as close to the raw data as possible.  See the Template page for more details.  If you just want
-to fire it up and see what it can do, you can use one from the examples directory.  They're numbered and commented in
-an attempt at a tutorial path of sorts.
+To use Conjure, you first need to create a template to show Conjure what your data looks like.  The template is a simple DSL that tries to be as close to the raw data as possible.  See the Template page for more details.  If you just want to fire it up and see what it can do, you can use one from the examples directory.  They're numbered and commented in an attempt at a tutorial path of sorts.
 
 Run
 The Conjurer will generate data using your template at the rate you specify.  To fire up the conjurer run:
-bin/conjure examples/simple-template.txt
+bin/conjure examples/01-fixed-data.txt
 That will run the generator for the simple-template.txt template, conjuring up data at 10 samples per second.
 You can also specify the rate:
-bin/firehose -rate 100 examples/simple-template.txt
+bin/conjure -rate 100 examples/01-fixed-data.txt
 Will generate at 100 samples per second.
 See the Conjurer page for more options.
