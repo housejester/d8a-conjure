@@ -1,5 +1,5 @@
 package io.d8a.conjure;
 
-public interface SampleNode {
+public interface ConjureTemplateNode {
     public StringBuilder generate(StringBuilder buff);
 }

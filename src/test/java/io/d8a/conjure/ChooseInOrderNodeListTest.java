@@ -29,10 +29,10 @@ public class ChooseInOrderNodeListTest {
     public void canBeReferencedInSampleGenerator(){
         ConjureTemplate generator = new ConjureTemplate();
         generator.addNode("order", inOrder);
-        generator.addNodeTemplate("sample", "Answer is: ${order}.");
-        assertEquals(generator.next(), "Answer is: one.");
-        assertEquals(generator.next(), "Answer is: two.");
-        assertEquals(generator.next(), "Answer is: three.");
+        generator.addFragment("sample", "Answer is: ${order}.");
+        assertEquals(generator.conjure(), "Answer is: one.");
+        assertEquals(generator.conjure(), "Answer is: two.");
+        assertEquals(generator.conjure(), "Answer is: three.");
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -44,14 +44,14 @@ public class ChooseInOrderNodeListTest {
     public void canBeRegisteredAsType(){
         ConjureTemplate template = new ConjureTemplate();
         template.addNodeType("cycle", ChooseInOrderNodeList.class);
-        template.addNodeTemplate("sample", "My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]");
-        assertEquals(template.next(), "My favorite is [a]");
-        assertEquals(template.next(), "My favorite is [b]");
-        assertEquals(template.next(), "My favorite is [c]");
+        template.addFragment("sample", "My favorite is [${type:\"cycle\", list:[\"a\",\"b\",\"c\"]}]");
+        assertEquals(template.conjure(), "My favorite is [a]");
+        assertEquals(template.conjure(), "My favorite is [b]");
+        assertEquals(template.conjure(), "My favorite is [c]");
 
-        assertEquals(template.next(), "My favorite is [a]");
-        assertEquals(template.next(), "My favorite is [b]");
-        assertEquals(template.next(), "My favorite is [c]");
+        assertEquals(template.conjure(), "My favorite is [a]");
+        assertEquals(template.conjure(), "My favorite is [b]");
+        assertEquals(template.conjure(), "My favorite is [c]");
     }
 
     private String generate() {

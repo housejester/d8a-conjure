@@ -2,12 +2,12 @@ package io.d8a.conjure;
 
 import java.util.Map;
 
-public class MemoizingNode implements SampleNode{
-    private SampleNode targetNode;
+public class MemoizingNode implements ConjureTemplateNode {
+    private ConjureTemplateNode targetNode;
     private String name;
     private Map<String,String> cache;
 
-    public MemoizingNode(SampleNode targetNode, String name, Map cache) {
+    public MemoizingNode(ConjureTemplateNode targetNode, String name, Map cache) {
         this.targetNode = targetNode;
         this.name = name;
         this.cache = cache;
@@ -21,7 +21,7 @@ public class MemoizingNode implements SampleNode{
         return buff.append(cache.get(name));
     }
 
-    public SampleNode getTargetNode() {
+    public ConjureTemplateNode getTargetNode() {
         return targetNode;
     }
 }

@@ -1,11 +1,11 @@
 package io.d8a.conjure;
 
-public class LazyRefSampleNode implements SampleNode{
+public class LazyRefNode implements ConjureTemplateNode {
     private String ref;
-    private SampleNode refNode;
+    private ConjureTemplateNode refNode;
     private ConjureTemplate template;
 
-    public LazyRefSampleNode(String ref, ConjureTemplate template) {
+    public LazyRefNode(String ref, ConjureTemplate template) {
         this.ref = ref;
         this.template = template;
     }

@@ -10,13 +10,14 @@ will get you a self contained artifact in target/d8a-conjure-*.jar
 Configure
 To use Conjure, you first need to create a template to show Conjure what your data looks like.  The template is a simple
 DSL that tries to be as close to the raw data as possible.  See the Template page for more details.  If you just want
-to fire it up and see what it can do, you can use one from the examples directory.
+to fire it up and see what it can do, you can use one from the examples directory.  They're numbered and commented in
+an attempt at a tutorial path of sorts.
 
 Run
-The Conjure firehose will generate data using your template at the rate you specify.  To fire up the firehose run:
-bin/firehose examples/simple-template.txt
-That will run the firehose for the simple-template.txt template, conjuring up data at 10 samples per second.
+The Conjurer will generate data using your template at the rate you specify.  To fire up the conjurer run:
+bin/conjure examples/simple-template.txt
+That will run the generator for the simple-template.txt template, conjuring up data at 10 samples per second.
 You can also specify the rate:
-bin/firehose -r 100 examples/simple-template.txt
+bin/firehose -rate 100 examples/simple-template.txt
 Will generate at 100 samples per second.
-See the Firehose page for more options.
+See the Conjurer page for more options.

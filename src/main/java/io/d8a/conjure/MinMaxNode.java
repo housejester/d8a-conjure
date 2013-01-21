@@ -2,7 +2,7 @@ package io.d8a.conjure;
 
 import java.util.Map;
 
-public class MinMaxNode implements SampleNode{
+public class MinMaxNode implements ConjureTemplateNode {
     private MinMax minmax;
 
     public MinMaxNode(long min, long max) {

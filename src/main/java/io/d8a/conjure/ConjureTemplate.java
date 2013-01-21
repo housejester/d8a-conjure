@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ConjureTemplate {
-    private Map<String, SampleNode> nodes;
+    private Map<String, ConjureTemplateNode> nodes;
     private Map<String, Method> typeRegistry;
     private Clock clock;
     private String refOpenToken = "${";
@@ -29,7 +29,7 @@ public class ConjureTemplate {
 
     public ConjureTemplate(Clock clock, String openToken, String closeToken) {
         this.clock = clock;
-        nodes = new HashMap<String, SampleNode>();
+        nodes = new HashMap<String, ConjureTemplateNode>();
         typeRegistry = new HashMap<String, Method>();
         this.refOpenToken = openToken;
         this.refCloseToken = closeToken;
@@ -40,19 +40,19 @@ public class ConjureTemplate {
         return clock;
     }
 
-    public void addNodeTemplate(String name, String template) {
+    public void addFragment(String name, String template) {
         addNode(name, parseNodes(template));
     }
 
-    public SampleNode parseNodes(String text){
-        List<SampleNode> nodes = compileToNodeList(text);
+    public ConjureTemplateNode parseNodes(String text){
+        List<ConjureTemplateNode> nodes = compileToNodeList(text);
         if(nodes.size() == 1){
             return nodes.get(0);
         }
         return new CombineNodeList(nodes);
     }
 
-    public String next(String templateName) {
+    public String conjure(String templateName) {
         if(nodes.containsKey(templateName)){
             try{
                 return nodes.get(templateName).generate(new StringBuilder()).toString();
@@ -63,15 +63,15 @@ public class ConjureTemplate {
         throw new IllegalArgumentException("Node '"+templateName+"' not found in the sample generator.");
     }
 
-    public String next() {
-        return next("sample");
+    public String conjure() {
+        return conjure("sample");
     }
 
-    public SampleNode getNode(String name) {
+    public ConjureTemplateNode getNode(String name) {
         return nodes.get(name);
     }
 
-    public void addNode(String name, SampleNode node) {
+    public void addNode(String name, ConjureTemplateNode node) {
         //when adding nodes directly via the api, mamoization will not happen.  The assumption is that the caller can
         //have full control over that behavior.
         if(nodes.containsKey(name)){
@@ -111,8 +111,8 @@ public class ConjureTemplate {
         return Collections.emptyMap();
     }
 
-    private List<SampleNode> compileToNodeList(String text) {
-        List<SampleNode> nodes = new ArrayList<SampleNode>();
+    private List<ConjureTemplateNode> compileToNodeList(String text) {
+        List<ConjureTemplateNode> nodes = new ArrayList<ConjureTemplateNode>();
         Snippet refSnip = findRef(text);
         while(refSnip != null){
             if(refSnip.start > 0){
@@ -120,7 +120,7 @@ public class ConjureTemplate {
             }
 
             String ref = text.substring(refSnip.start + refOpenToken.length(), refSnip.stop).trim();
-            SampleNode refNode = resolveNodeFromRef(ref);
+            ConjureTemplateNode refNode = resolveNodeFromRef(ref);
             nodes.add(refNode);
 
             text = text.substring(refSnip.stop + refCloseToken.length());
@@ -132,25 +132,25 @@ public class ConjureTemplate {
         return nodes;
     }
 
-    private SampleNode resolveNodeFromRef(String ref) {
+    private ConjureTemplateNode resolveNodeFromRef(String ref) {
         Map config;
         try{
             config = json.readValue("{"+ref+"}", Map.class);
         }catch(Exception ex){
-            SampleNode node = this.nodes.get(ref);
+            ConjureTemplateNode node = this.nodes.get(ref);
             if(node == null){
-                node = new LazyRefSampleNode(ref, this);
+                node = new LazyRefNode(ref, this);
             }
             return node;
         }
-        SampleNode node = null;
+        ConjureTemplateNode node = null;
         String typeName = (String) config.get("type");
         if(typeName != null){
             Method nodeCreator = resolveNodeCreator(typeName);
 
             node = createNodeFromMethod(typeName, nodeCreator, config, this);
         }else if(config.containsKey("ref")){
-            node = new LazyRefSampleNode((String)config.get("ref"), this);
+            node = new LazyRefNode((String)config.get("ref"), this);
         }
         String name = (String)config.get("name");
         if(name != null){
@@ -179,14 +179,14 @@ public class ConjureTemplate {
         return typeRegistry.get(typeName);
     }
 
-    private SampleNode createNodeFromMethod(String typeName, Method creator, Map config, ConjureTemplate generator) {
+    private ConjureTemplateNode createNodeFromMethod(String typeName, Method creator, Map config, ConjureTemplate generator) {
         Object[] args = new Object[creator.getParameterTypes().length];
         args[0] = config;
         if(args.length > 1){
             args[1] = generator;
         }
         try {
-            return (SampleNode)creator.invoke(null, args);
+            return (ConjureTemplateNode)creator.invoke(null, args);
         } catch (Exception e) {
             throw new IllegalStateException("Problem creating the '"+typeName+"' node.", e);
         }

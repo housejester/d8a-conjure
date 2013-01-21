@@ -19,7 +19,7 @@ public class ChooseByWeightNodeList extends NodeList{
     private List<Integer> weightTiers = new ArrayList<Integer>();
     private int sumOfWeights = 0;
 
-    public void add(SampleNode node, int weight){
+    public void add(ConjureTemplateNode node, int weight){
         add(new WeightedNode(node, weight));
     }
 
@@ -48,7 +48,7 @@ public class ChooseByWeightNodeList extends NodeList{
         }
     }
 
-    private int getNodeWeight(SampleNode node) {
+    private int getNodeWeight(ConjureTemplateNode node) {
         if(node instanceof WeightedNode){
             return ((WeightedNode)node).getWeight();
         }
@@ -66,7 +66,7 @@ public class ChooseByWeightNodeList extends NodeList{
         return nodes;
     }
 
-    public static SampleNode parseWeightedNode(String line, ConjureTemplate template) {
+    public static ConjureTemplateNode parseWeightedNode(String line, ConjureTemplate template) {
         int weight = 1;
         int index = line.indexOf(':');
         if(index != -1){
@@ -76,7 +76,7 @@ public class ChooseByWeightNodeList extends NodeList{
             }catch(Exception ex){
             }
         }
-        SampleNode node = template.parseNodes(line);
+        ConjureTemplateNode node = template.parseNodes(line);
         return new WeightedNode(node, weight);
     }
 }

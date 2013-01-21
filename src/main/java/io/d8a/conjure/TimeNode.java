@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Map;
 
-public class TimeNode implements SampleNode {
+public class TimeNode implements ConjureTemplateNode {
     private final Clock clock;
     private final DateNodeFormatter format;
 
@@ -42,7 +42,7 @@ public class TimeNode implements SampleNode {
         return buff;
     }
 
-    public static SampleNode createNode(Map config, ConjureTemplate template) {
+    public static ConjureTemplateNode createNode(Map config, ConjureTemplate template) {
         String format = (String)config.get("format");
         if(format == null){
             format = "millis";

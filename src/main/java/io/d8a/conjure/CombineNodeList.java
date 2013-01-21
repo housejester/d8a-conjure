@@ -11,7 +11,7 @@ public class CombineNodeList extends NodeList {
         this(DEFAULT_SEPARATOR);
     }
 
-    public CombineNodeList(List<SampleNode> nodes) {
+    public CombineNodeList(List<ConjureTemplateNode> nodes) {
         this();
         add(nodes);
     }
@@ -27,7 +27,7 @@ public class CombineNodeList extends NodeList {
     @Override
     protected void generateNonEmpty(StringBuilder buff){
         boolean first = true;
-        for(SampleNode node : nodes){
+        for(ConjureTemplateNode node : nodes){
             if(first){
                 first = false;
             }else{

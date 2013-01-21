@@ -21,16 +21,16 @@ public class CombineNodeListTest {
     public void canBeRegisteredAsType(){
         ConjureTemplate template = new ConjureTemplate();
         template.addNodeType("combine", CombineNodeList.class);
-        template.addNodeTemplate("sample", "My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"]}]");
-        assertEquals(template.next(), "My favorite is [abc]");
-        assertEquals(template.next(), "My favorite is [abc]");
+        template.addFragment("sample", "My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"]}]");
+        assertEquals(template.conjure(), "My favorite is [abc]");
+        assertEquals(template.conjure(), "My favorite is [abc]");
     }
 
     public void canSetSeparatorInConfig(){
         ConjureTemplate template = new ConjureTemplate();
         template.addNodeType("combine", CombineNodeList.class);
-        template.addNodeTemplate("sample", "My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"], separator:\",\"}]");
-        assertEquals(template.next(), "My favorite is [a,b,c]");
-        assertEquals(template.next(), "My favorite is [a,b,c]");
+        template.addFragment("sample", "My favorite is [${type:\"combine\", list:[\"a\",\"b\",\"c\"], separator:\",\"}]");
+        assertEquals(template.conjure(), "My favorite is [a,b,c]");
+        assertEquals(template.conjure(), "My favorite is [a,b,c]");
     }
 }

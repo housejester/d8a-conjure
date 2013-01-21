@@ -21,8 +21,8 @@ public class MinMaxNodeTypeTest {
     }
 
     public void generatesNumberBetweenMinMax(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:10, max:20}].");
-        long value = parseNumber(samples.next());
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:10, max:20}].");
+        long value = parseNumber(samples.conjure());
         assertInRange(value, 10, 100);
     }
 
@@ -31,12 +31,12 @@ public class MinMaxNodeTypeTest {
         int max = 50;
         int count = (max - min)+1;
 
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:"+min+", max:"+max+"}].");
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:" + min + ", max:" + max + "}].");
 
         HashSet<Long> values = new HashSet<Long>(count);
         int attempts = 0;
         while(values.size() < count && attempts < count * 1000){
-            long value = parseNumber(samples.next());
+            long value = parseNumber(samples.conjure());
             values.add(value);
             ++attempts;
         }
@@ -48,26 +48,26 @@ public class MinMaxNodeTypeTest {
     }
 
     public void allowsNegativeForMin(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:-110, max:100}].");
-        long value = parseNumber(samples.next());
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:-110, max:100}].");
+        long value = parseNumber(samples.conjure());
         assertInRange(value, -110, 100);
     }
 
     public void allowsNegativeForMax(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:-110, max:-10}].");
-        long value = parseNumber(samples.next());
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:-110, max:-10}].");
+        long value = parseNumber(samples.conjure());
         assertInRange(value, -110, -10);
     }
 
     public void fixesTransposedMinMax(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:100, max:10}].");
-        long value = parseNumber(samples.next());
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:100, max:10}].");
+        long value = parseNumber(samples.conjure());
         assertInRange(value, 10, 100);
     }
 
     public void canHaveSameMinAndMax(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:100, max:100}].");
-        long value = parseNumber(samples.next());
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:100, max:100}].");
+        long value = parseNumber(samples.conjure());
         assertEquals(value, 100);
     }
 
@@ -82,7 +82,7 @@ public class MinMaxNodeTypeTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void templatesFailWhenAddedWithoutMin(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",max:100}].");
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",max:100}].");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -94,7 +94,7 @@ public class MinMaxNodeTypeTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void templatesFailWhenAddedWithoutMax(){
-        samples.addNodeTemplate("sample", "The current temp is [${type:\"minmax\",min:100}].");
+        samples.addFragment("sample", "The current temp is [${type:\"minmax\",min:100}].");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

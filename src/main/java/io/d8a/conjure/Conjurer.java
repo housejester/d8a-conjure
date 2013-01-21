@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class ConjurerFirehose implements Runnable{
+public class Conjurer implements Runnable{
     private static final Random RAND = new Random();
 
     private final Clock clock;
@@ -20,15 +20,15 @@ public class ConjurerFirehose implements Runnable{
     private long count = 0;
     private ConjureTemplate template;
 
-    public ConjurerFirehose(long stopTime, Printer printer, int linesPerSec, String filePath){
+    public Conjurer(long stopTime, Printer printer, int linesPerSec, String filePath){
         this(-1, stopTime, printer, linesPerSec, Long.MAX_VALUE, filePath);
     }
 
-    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec, String filePath) {
+    public Conjurer(long startTime, long stopTime, Printer printer, int linesPerSec, String filePath) {
         this(startTime, stopTime, printer, linesPerSec, Long.MAX_VALUE, filePath);
     }
 
-    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath) {
+    public Conjurer(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath) {
         this.stopTime = stopTime;
         this.printer = printer;
         this.linesPerSec = linesPerSec;
@@ -60,6 +60,17 @@ public class ConjurerFirehose implements Runnable{
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd = parser.parse(options, args);
+
+        String filePath = null;
+        String[] appArgs = cmd.getArgs();
+        if(appArgs != null && appArgs.length > 0){
+            filePath = appArgs[0];
+        }else{
+            filePath = cmd.getOptionValue("template");
+        }
+        if(filePath == null){
+            throw new IllegalArgumentException("Must specify a template that describes the data to be generated.");
+        }
 
         long stopTime = Long.MAX_VALUE;
         if (cmd.hasOption("stopTime")) {
@@ -95,11 +106,12 @@ public class ConjurerFirehose implements Runnable{
             numLines = new Long(cmd.getOptionValue("cap"));
         }
         long start = System.currentTimeMillis();
-        String filePath = cmd.getOptionValue("template");
-        ConjurerFirehose conjurerFirehose = new ConjurerFirehose(startTime, stopTime, printer, linesPerSec, numLines, filePath);
-        conjurerFirehose.exhaust();
+
+
+        Conjurer conjurer = new Conjurer(startTime, stopTime, printer, linesPerSec, numLines, filePath);
+        conjurer.exhaust();
         long duration = System.currentTimeMillis() - start;
-        System.out.println("ConjurerFirehose finished.  Took " + duration + "ms to conjure up " + conjurerFirehose.getCount()+" samples.");
+        System.out.println("Conjurer finished.  Took " + duration + "ms to conjure up " + conjurer.getCount()+" samples.");
     }
 
     public void exhaust(){
@@ -143,37 +155,7 @@ public class ConjurerFirehose implements Runnable{
     }
 
     private Iterator<String> conjureNextBatch() {
-        return Arrays.asList(template.next().split("\n")).iterator();
-    }
-
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    private String genLineHardcode() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        long now = clock.currentTimeMillis();
-        map.put("install_timestamp", now - randInt(9, 1000000));
-        map.put("event_timestamp", now);
-        map.put("publisherId", randInt(1, 130));
-        map.put("campaignId", randInt(1, 3000));
-        map.put("adgroupId", randInt(1, 25));
-        map.put("appId", randInt(1, 280));
-        map.put("adId", randInt(1, 44000));
-        map.put("country", randString("US", "AR", "BE", "BR", "CA", "CH", "CN", "DE"));
-        map.put("event", randString("__appuse", "click", "install", "log+in+with+facebook", "bought+token"));
-        map.put("event_value", 1);
-        map.put("days_from_install", randInt(0, 365));
-        map.put("engagement", randInt(0, 600));
-        map.put("retention", randInt(0, 88));
-        map.put("revenue", randInt(0, 210));
-        return toJson(mapper, map);
-    }
-
-    private String toJson(ObjectMapper mapper, Map<String, Object> map){
-        try {
-            return mapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Problem writing map as json.", e);
-        }
+        return Arrays.asList(template.conjure().split("\n")).iterator();
     }
 
     private static Printer nonePrinter() {
@@ -212,22 +194,6 @@ public class ConjurerFirehose implements Runnable{
             return false;
         }
         return true;
-    }
-
-    private static String randString(String...values) {
-        return values[RAND.nextInt(values.length)];
-    }
-
-    private static long randInt(int min, int max) {
-        if(min > max){
-            int a = min;
-            min = max;
-            max = a;
-        }
-        if(min == max){
-            return 0;
-        }
-        return min + RAND.nextInt(max - min);
     }
 
     public static Printer kafkaPrinter(String zkString, String topic){

@@ -1,10 +1,10 @@
 package io.d8a.conjure;
 
-public class WeightedNode implements SampleNode {
-    private SampleNode target;
+public class WeightedNode implements ConjureTemplateNode {
+    private ConjureTemplateNode target;
     private int weight;
 
-    public WeightedNode(SampleNode target, int weight) {
+    public WeightedNode(ConjureTemplateNode target, int weight) {
         this.target = target;
         this.weight = weight;
     }

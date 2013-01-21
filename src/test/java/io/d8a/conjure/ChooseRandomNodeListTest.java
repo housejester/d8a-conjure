@@ -37,7 +37,7 @@ public class ChooseRandomNodeListTest {
             found.add(new Integer(generate()));
         }
         assertEquals(found.size(), size);
-        for(SampleNode node : randomOrder.getNodes()){
+        for(ConjureTemplateNode node : randomOrder.getNodes()){
             assertTrue(found.contains(new Integer(((BareTextNode)node).getText())));
         }
     }
@@ -70,13 +70,13 @@ public class ChooseRandomNodeListTest {
     public void canBeReferencedInSampleGenerator(){
         ConjureTemplate generator = new ConjureTemplate();
         generator.addNode("random", randomOrder);
-        generator.addNodeTemplate("sample", "Answer is: [${random}].");
+        generator.addFragment("sample", "Answer is: [${random}].");
         Set<Integer> values = new HashSet<Integer>();
-        for(SampleNode node : randomOrder.getNodes()){
+        for(ConjureTemplateNode node : randomOrder.getNodes()){
             values.add(new Integer(((BareTextNode)node).getText()));
         }
         for(int i=0;i<20;i++){
-            int embedded = parseNumber(generator.next());
+            int embedded = parseNumber(generator.conjure());
             assertTrue(values.contains(Integer.valueOf(embedded)));
         }
     }
@@ -90,8 +90,8 @@ public class ChooseRandomNodeListTest {
     public void canBeRegisteredAsType(){
         ConjureTemplate template = new ConjureTemplate();
         template.addNodeType("randomChoice", ChooseRandomNodeList.class);
-        template.addNodeTemplate("sample", "My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]");
-        String text = template.next();
+        template.addFragment("sample", "My favorite is [${type:\"randomChoice\", list:[\"a\",\"b\",\"c\"]}]");
+        String text = template.conjure();
         String value = text.substring(text.indexOf('[')+1, text.indexOf(']'));
         assertTrue(Arrays.asList("a", "b", "c").contains(value));
     }

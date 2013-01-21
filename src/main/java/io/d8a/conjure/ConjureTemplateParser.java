@@ -38,7 +38,7 @@ public class ConjureTemplateParser {
                 currentNodeList = null;
                 endToken = "";
             }else if(!isBlank(line)){
-                SampleNode node = template.parseNodes(line);
+                ConjureTemplateNode node = template.parseNodes(line);
                 NodeList nodeAsNodeList = unwrapNodeList(node);
                 if(currentNodeList != null){
                     currentNodeList.add(node);
@@ -58,19 +58,19 @@ public class ConjureTemplateParser {
         return template;
     }
 
-    private NodeList unwrapNodeList(SampleNode node) {
-        SampleNode unwrapped = unwrapNode(node);
+    private NodeList unwrapNodeList(ConjureTemplateNode node) {
+        ConjureTemplateNode unwrapped = unwrapNode(node);
         if(unwrapped instanceof NodeList){
             return (NodeList) unwrapped;
         }
         return null;
     }
 
-    private boolean isNodeList(SampleNode node) {
+    private boolean isNodeList(ConjureTemplateNode node) {
         return unwrapNode(node) instanceof NodeList;
     }
 
-    private SampleNode unwrapNode(SampleNode node){
+    private ConjureTemplateNode unwrapNode(ConjureTemplateNode node){
         if(node instanceof MemoizingNode){
             return ((MemoizingNode)node).getTargetNode();
         }

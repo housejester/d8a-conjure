@@ -2,8 +2,8 @@ package io.d8a.conjure;
 
 import java.util.*;
 
-public abstract class NodeList implements SampleNode {
-    protected List<SampleNode> nodes = new ArrayList<SampleNode>();
+public abstract class NodeList implements ConjureTemplateNode {
+    protected List<ConjureTemplateNode> nodes = new ArrayList<ConjureTemplateNode>();
     private boolean allowsGenerateOnEmpty = false;
 
     public NodeList(){
@@ -14,15 +14,15 @@ public abstract class NodeList implements SampleNode {
         this.allowsGenerateOnEmpty = allowsGenerateOnEmpty;
     }
 
-    public void add(SampleNode...nodes){
+    public void add(ConjureTemplateNode...nodes){
         add(Arrays.asList(nodes));
     }
 
-    public void add(Collection<SampleNode> nodes){
+    public void add(Collection<ConjureTemplateNode> nodes){
         this.nodes.addAll(nodes);
     }
 
-    public List<SampleNode> getNodes() {
+    public List<ConjureTemplateNode> getNodes() {
         return Collections.unmodifiableList(nodes);
     }
 
