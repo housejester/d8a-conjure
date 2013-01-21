@@ -36,20 +36,20 @@ public class ConjureTemplateParser {
         String endToken = "";
         ChooseInOrderNodeList list = new ChooseInOrderNodeList();
         while(line != null){
-            if(!isBlank(line) && !isEndToken(line, endToken)){
+            if( isEndToken(line, endToken) ){
+                currentNodeList = null;
+                endToken = "";
+            }else if(!isBlank(line)){
                 SampleNode node = conjurer.parseNodes(line);
                 if(currentNodeList != null){
                     currentNodeList.add(node);
-                }else if(node instanceof NodeList){
-                    currentNodeList = (NodeList)node;
+                }else if(isNodeList(node)){
+                    currentNodeList = (NodeList)unwrapNode(node);
                     endToken = parseEndToken(line, conjurer);
                     list.add(node);
                 } else {
                     list.add(node);
                 }
-            }else{
-                currentNodeList = null;
-                endToken = "";
             }
             line = reader.readLine();
         }
@@ -57,6 +57,17 @@ public class ConjureTemplateParser {
             conjurer.addNode("sample", list);
         }
         return conjurer;
+    }
+
+    private boolean isNodeList(SampleNode node) {
+        return unwrapNode(node) instanceof NodeList;
+    }
+
+    private SampleNode unwrapNode(SampleNode node){
+        if(node instanceof MemoizingNode){
+            return ((MemoizingNode)node).getTargetNode();
+        }
+        return node;
     }
 
     private String parseEndToken(String line, Conjurer conjurer) {

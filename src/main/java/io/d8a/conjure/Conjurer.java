@@ -12,6 +12,7 @@ public class Conjurer {
     private Clock clock;
     private String refOpenToken = "${";
     private String refCloseToken = "}";
+    private Map<String,String> namedNodeValueCache;
 
     private static final ObjectMapper json = new ObjectMapper();
     static{
@@ -32,6 +33,7 @@ public class Conjurer {
         typeRegistry = new HashMap<String, Method>();
         this.refOpenToken = openToken;
         this.refCloseToken = closeToken;
+        this.namedNodeValueCache = new HashMap<String, String>();
     }
 
     public Clock getClock() {
@@ -52,7 +54,11 @@ public class Conjurer {
 
     public String next(String templateName) {
         if(nodes.containsKey(templateName)){
-            return nodes.get(templateName).generate(new StringBuilder()).toString();
+            try{
+                return nodes.get(templateName).generate(new StringBuilder()).toString();
+            }finally{
+                namedNodeValueCache.clear();
+            }
         }
         throw new IllegalArgumentException("Node '"+templateName+"' not found in the sample generator.");
     }
@@ -66,6 +72,8 @@ public class Conjurer {
     }
 
     public void addNode(String name, SampleNode node) {
+        //when adding nodes directly via the api, mamoization will not happen.  The assumption is that the caller can
+        //have full control over that behavior.
         if(nodes.containsKey(name)){
             throw new IllegalArgumentException("Node '"+name+"' already added to this generator.");
         }
@@ -101,7 +109,6 @@ public class Conjurer {
         }catch(Exception ex){
         }
         return Collections.emptyMap();
-
     }
 
     private List<SampleNode> compileToNodeList(String text) {
@@ -136,14 +143,23 @@ public class Conjurer {
             }
             return node;
         }
+        SampleNode node = null;
         String typeName = (String) config.get("type");
-        Method nodeCreator = resolveNodeCreator(typeName);
+        if(typeName != null){
+            Method nodeCreator = resolveNodeCreator(typeName);
 
-        SampleNode node = createNodeFromMethod(typeName, nodeCreator, config, this);
+            node = createNodeFromMethod(typeName, nodeCreator, config, this);
+        }else if(config.containsKey("ref")){
+            node = new LazyRefSampleNode((String)config.get("ref"), this);
+        }
         String name = (String)config.get("name");
         if(name != null){
             //TODO: don't like how this happens under the hood as a side-effect of parsing nodes from text
-            this.nodes.put(name, node);
+            Boolean remember = (Boolean)config.get("remember");
+            if( remember == null || remember){
+                node = new MemoizingNode(node, name, namedNodeValueCache);
+            }
+            this.addNode(name, node);
         }
         return node;
     }

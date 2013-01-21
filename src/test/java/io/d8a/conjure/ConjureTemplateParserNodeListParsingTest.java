@@ -60,6 +60,24 @@ public class ConjureTemplateParserNodeListParsingTest {
         assertEquals(conjurer.next(), "This is not in the cycle.");
     }
 
+    public void canHaveWhitespaceBetweenCustomEndTokens() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        Conjurer conjurer = parser.parse(toInputStream("${type:\"cycle\",endToken:\"---\"}\none\n\n\ntwo\nthree\n---\nThis is not in the cycle."));
+        assertEquals(conjurer.next(), "one");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+        assertEquals(conjurer.next(), "two");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+        assertEquals(conjurer.next(), "three");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+
+        assertEquals(conjurer.next(), "one");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+        assertEquals(conjurer.next(), "two");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+        assertEquals(conjurer.next(), "three");
+        assertEquals(conjurer.next(), "This is not in the cycle.");
+    }
+
     public void canSpecifyThePrimarySampleNode() throws IOException {
         ConjureTemplateParser parser = new ConjureTemplateParser();
         Conjurer conjurer = parser.parse(toInputStream("${name:\"sample\",type:\"cycle\",endToken:\"---\"}\none\ntwo\nthree\n---\nThis is not in the cycle."));

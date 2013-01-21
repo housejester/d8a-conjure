@@ -2,7 +2,9 @@ package io.d8a.conjure;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import scala.actors.threadpool.Arrays;
 
+import java.util.HashSet;
 import java.util.Random;
 
 import static org.testng.Assert.assertEquals;
@@ -174,6 +176,38 @@ public class ConjurerTest {
 
         assertEquals(samples.next(), "I can see "+rand+"!");
 
+    }
+
+    public void templateRefsCanBeLongHand(){
+        samples.addNodeTemplate("other", "World");
+        samples.addNodeTemplate("sample", "Hello, ${ref:\"other\"}!");
+
+        assertEquals(samples.next(), "Hello, World!");
+    }
+
+    public void refIgnoredIfTypeDetailsSpecified(){
+        samples.addNodeTemplate("other", "World");
+        samples.addNodeTemplate("sample", "Hello, ${ref:\"other\",type:\"io.d8a.conjure.CombineNodeList\",list:[\"TypedWorld\"]}!");
+
+        assertEquals(samples.next(), "Hello, TypedWorld!");
+    }
+
+    public void referencedValuesAreRememberedByDefaultWithinSingleRun(){
+        samples.addNodeType("minmax", MinMaxNode.class);
+        samples.addNodeTemplate("lotteryTemplate", "${name:\"lottery\",type:\"minmax\",min:0,max:999}");
+        samples.addNodeTemplate("sample", "Lottery Numbers:${lottery},${lottery},${lottery},${lottery},${lottery}");
+        String text = samples.next();
+        String numbersPart = text.substring(text.indexOf(':')+1);
+        assertEquals((new HashSet<Number>(Arrays.asList(numbersPart.split(",")))).size(), 1);
+    }
+
+    public void referencedValuesCanBeConfiguredToNotRememberValues(){
+        samples.addNodeType("minmax", MinMaxNode.class);
+        samples.addNodeTemplate("lotteryTemplate", "${name:\"lottery\",type:\"minmax\",min:0,max:999,remember:false}");
+        samples.addNodeTemplate("sample", "Lottery Numbers:${lottery},${lottery},${lottery},${lottery},${lottery}");
+        String text = samples.next();
+        String numbersPart = text.substring(text.indexOf(':')+1);
+        assertEquals((new HashSet<Number>(Arrays.asList(numbersPart.split(",")))).size(), 5);
     }
 }
 

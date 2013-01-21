@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,25 +18,34 @@ public class ConjurerFirehose implements Runnable{
     private final Printer printer;
     private final int linesPerSec;
     private final long maxLines;
+    private String filePath;
     private long count = 0;
+    private Conjurer conjurer;
 
-    public ConjurerFirehose(long stopTime, Printer printer, int linesPerSec){
-        this(-1, stopTime, printer, linesPerSec, Long.MAX_VALUE);
+    public ConjurerFirehose(long stopTime, Printer printer, int linesPerSec, String filePath){
+        this(-1, stopTime, printer, linesPerSec, Long.MAX_VALUE, filePath);
     }
 
-    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec) {
-        this(startTime, stopTime, printer, linesPerSec, Long.MAX_VALUE);
+    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec, String filePath) {
+        this(startTime, stopTime, printer, linesPerSec, Long.MAX_VALUE, filePath);
     }
 
-    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines) {
+    public ConjurerFirehose(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath) {
         this.stopTime = stopTime;
         this.printer = printer;
         this.linesPerSec = linesPerSec;
         this.maxLines = maxLines;
+        this.filePath = filePath;
         if(startTime < 0){ //-1 means generate data moving forward.
             clock = Clock.SYSTEM_CLOCK;
         }else{
             clock = new SimulatedClock(startTime);
+        }
+        ConjureTemplateParser parser = new ConjureTemplateParser(clock);
+        try {
+            this.conjurer = parser.parse(new FileInputStream(filePath));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not create Conjurer from "+filePath, e);
         }
     }
 
@@ -43,6 +53,7 @@ public class ConjurerFirehose implements Runnable{
         Options options = new Options();
         options.addOption("zk", true, "Zookeeper connection string for kafka");
         options.addOption("topic", true, "Kafka topic to send data to");
+        options.addOption("template", true, "Path to the Conjure Template file that describes the data to generate");
         options.addOption("rate", true, "Lines per second");
         options.addOption("cap", true, "Total lines to generate");
         options.addOption("out", true, "Where to write the generated samples.  [kafka|console|none]");
@@ -86,7 +97,8 @@ public class ConjurerFirehose implements Runnable{
             numLines = new Long(cmd.getOptionValue("cap"));
         }
         long start = System.currentTimeMillis();
-        ConjurerFirehose conjurerFirehose = new ConjurerFirehose(startTime, stopTime, printer, linesPerSec, numLines);
+        String filePath = cmd.getOptionValue("template");
+        ConjurerFirehose conjurerFirehose = new ConjurerFirehose(startTime, stopTime, printer, linesPerSec, numLines, filePath);
         conjurerFirehose.exhaust();
         long duration = System.currentTimeMillis() - start;
         System.out.println("ConjurerFirehose finished.  Took " + duration + "ms to conjure up " + conjurerFirehose.getCount()+" samples.");
@@ -105,8 +117,6 @@ public class ConjurerFirehose implements Runnable{
         System.err.println("Conjuring data to "+ printer.getName() +" at a rate of "+linesPerSec+" lines per second.");
         double linesPerMs = (double)linesPerSec / 1000;
 
-        ObjectMapper mapper = new ObjectMapper();
-
         long start = clock.currentTimeMillis();
         long lastReport = start;
         long bytesWritten = 0L;
@@ -117,23 +127,7 @@ public class ConjurerFirehose implements Runnable{
             if(Thread.currentThread().isInterrupted()){
                 return;
             }
-            Map<String, Object> map = new HashMap<String, Object>();
-            long now = clock.currentTimeMillis();
-            map.put("install_timestamp", now - randInt(9, 1000000));
-            map.put("event_timestamp", now);
-            map.put("publisherId", randInt(1, 130));
-            map.put("campaignId", randInt(1, 3000));
-            map.put("adgroupId", randInt(1, 25));
-            map.put("appId", randInt(1, 280));
-            map.put("adId", randInt(1, 44000));
-            map.put("country", randString("US", "AR", "BE", "BR", "CA", "CH", "CN", "DE"));
-            map.put("event", randString("__appuse", "click", "install", "log+in+with+facebook", "bought+token"));
-            map.put("event_value", 1);
-            map.put("days_from_install", randInt(0, 365));
-            map.put("engagement", randInt(0, 600));
-            map.put("retention", randInt(0, 88));
-            map.put("revenue", randInt(0, 210));
-            String str = toJson(mapper, map);
+            String str = genLine();
             bytesWritten += str.length();
             printer.print(str);
             lastLinePrinted = str;
@@ -144,6 +138,32 @@ public class ConjurerFirehose implements Runnable{
             }
         }
         report(start, count, lastLinePrinted, bytesWritten);
+    }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private String genLine() {
+        return conjurer.next();
+    }
+
+    private String genLineHardcode() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        long now = clock.currentTimeMillis();
+        map.put("install_timestamp", now - randInt(9, 1000000));
+        map.put("event_timestamp", now);
+        map.put("publisherId", randInt(1, 130));
+        map.put("campaignId", randInt(1, 3000));
+        map.put("adgroupId", randInt(1, 25));
+        map.put("appId", randInt(1, 280));
+        map.put("adId", randInt(1, 44000));
+        map.put("country", randString("US", "AR", "BE", "BR", "CA", "CH", "CN", "DE"));
+        map.put("event", randString("__appuse", "click", "install", "log+in+with+facebook", "bought+token"));
+        map.put("event_value", 1);
+        map.put("days_from_install", randInt(0, 365));
+        map.put("engagement", randInt(0, 600));
+        map.put("retention", randInt(0, 88));
+        map.put("revenue", randInt(0, 210));
+        return toJson(mapper, map);
     }
 
     private String toJson(ObjectMapper mapper, Map<String, Object> map){
