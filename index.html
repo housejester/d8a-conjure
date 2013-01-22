@@ -1,0 +1,93 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>d8a-conjure</title>
+  <meta name="description" content="Conjure is a tool for generating good sample data.  ">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">d8a-conjure</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Conjure is a tool for generating good sample data.  </p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/housejester/d8a-conjure/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/housejester/d8a-conjure/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/housejester/d8a-conjure" class="code">View d8a-conjure on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h3>Conjure</h3>
+
+<p>Conjure is a data generator.  You'd use Conjure any time you need to generate a lot of test data.  It can generate piles of data on disk, or emit to kafka queues as a realtime firehose simulator.</p>
+
+<h3>Building</h3>
+
+<p>Conjure is built with maven, so the standard</p>
+
+<pre><code>mvn clean install
+</code></pre>
+
+<p>will get you a self contained artifact in target/d8a-conjure-*.jar</p>
+
+<h3>Configure</h3>
+
+<p>To use Conjure, you first need to create a template to show Conjure what your data looks like.  The template is a simple DSL that tries to be as close to the raw data as possible.  See the Template page for more details.  If you just want to fire it up and see what it can do, you can use one from the examples directory.  They're numbered and commented in an attempt at a tutorial path of sorts.</p>
+
+<h3>Run</h3>
+
+<p>The Conjurer will generate data using your template at the rate you specify.  To fire up the conjurer run:</p>
+
+<pre><code>bin/conjure examples/01-fixed-data.txt
+</code></pre>
+
+<p>That will run the generator for the simple-template.txt template, conjuring up data at 10 lines per second.
+You can also specify the rate:</p>
+
+<pre><code>bin/conjure -rate 100 examples/01-fixed-data.txt
+</code></pre>
+
+<p>Will generate at 100 lines per second.
+See the Conjurer page for more options.</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/housejester" class="avatar"><img src="https://secure.gravatar.com/avatar/7b853a0359688204655932fd0cd202b5?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/housejester">housejester</a> maintains <a href="https://github.com/housejester/d8a-conjure">d8a-conjure</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/housejester/d8a-conjure/tarball/master" class="tar">tar</a><a href="https://github.com/housejester/d8a-conjure/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
