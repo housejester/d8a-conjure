@@ -192,6 +192,12 @@ public class ConjureTemplateTest {
         assertEquals(samples.conjure(), "Hello, TypedWorld!");
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void mustSpecifyRefOrType(){
+        samples.addFragment("other", "World");
+        samples.addFragment("sample", "Hello, ${list:[\"TypedWorld\"]}!");
+    }
+
     public void referencedValuesAreRememberedByDefaultWithinSingleRun(){
         samples.addNodeType("minmax", MinMaxNode.class);
         samples.addFragment("lotteryTemplate", "${name:\"lottery\",type:\"minmax\",min:0,max:999}");

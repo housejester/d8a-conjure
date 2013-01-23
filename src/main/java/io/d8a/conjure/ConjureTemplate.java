@@ -151,6 +151,8 @@ public class ConjureTemplate {
             node = createNodeFromMethod(typeName, nodeCreator, config, this);
         }else if(config.containsKey("ref")){
             node = new LazyRefNode((String)config.get("ref"), this);
+        } else {
+            throw new IllegalArgumentException("Must specify either 'type' or 'ref'.");
         }
         String name = (String)config.get("name");
         if(name != null){
