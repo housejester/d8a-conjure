@@ -1,0 +1,32 @@
+${name:"sample", type:"combine", endToken:"---", separator:" "}
+The current time is ${now}.  Lottery numbers are:
+${lotteryNumber},${lotteryNumber},${lotteryNumber},${lotteryNumber},${name:"powerball", ref:"lotteryNumber"}
+The winning color is ${name:"winningColor", ref:"colors"}.
+Since the winner was ${winningColor}, and the power ball was ${powerball}, there ${willOrNot} be a bonus for the ${now} drawing.
+There were ${numWinners}
+---
+
+${name:"now", type:"time", format:"yyyy-MM-dd HH:mm:ss Z"}
+${name:"lotteryNumber", type:"minmax", min:0, max:99, remember:false}
+${name:"colors", type:"randomChoice", remember:false}
+Red
+Green
+Blue
+Yellow
+Orange
+Purple
+Black
+White
+
+${name:"willOrNot", type:"randomChoice", remember:false}
+will
+will not
+
+# Weighted values allow you to specify an arbitrary numeric weight to each possible value.  The value will 
+# be 'chosen' based on that weight relative to the other weights.  For example, the sum of the total weights
+# here is 107, so the 'One Winner!' value will be emitted about 5 times every 107 calls. 
+${name:"numWinners", type:"weighted"}
+99:NO Winners :(
+5:One Winner!
+2:Two Winners!!
+1:Three Winners!!!

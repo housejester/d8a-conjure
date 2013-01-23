@@ -38,17 +38,25 @@ public class ConjureTemplateParser {
                 currentNodeList = null;
                 endToken = "";
             }else if(!isBlank(line)){
-                ConjureTemplateNode node = template.parseNodes(line);
-                NodeList nodeAsNodeList = unwrapNodeList(node);
                 if(currentNodeList != null){
+	  	    ConjureTemplateNode node = null;
+		    if( currentNodeList instanceof ChooseByWeightNodeList){
+                        node = ((ChooseByWeightNodeList)currentNodeList).parseWeightedNode(line, template);
+                    } else {
+                    	node = template.parseNodes(line);
+                    }
                     currentNodeList.add(node);
-                }else if(nodeAsNodeList != null && nodeAsNodeList.isEmpty()){
-                    currentNodeList = nodeAsNodeList;
-                    endToken = parseEndToken(line, template);
-                    list.add(node);
-                } else {
-                    list.add(node);
-                }
+                }else {
+	  	    ConjureTemplateNode node = template.parseNodes(line);
+                    NodeList nodeAsNodeList = unwrapNodeList(node);
+                    if(nodeAsNodeList != null && nodeAsNodeList.isEmpty()){
+                         currentNodeList = nodeAsNodeList;
+                         endToken = parseEndToken(line, template);
+                         list.add(node);
+                    } else {
+                      list.add(node);
+                    }
+              }
             }
             line = reader.readLine();
         }
