@@ -32,12 +32,17 @@ public class ConjureTemplateParser {
         String line = reader.readLine();
         NodeList currentNodeList = null;
         String endToken = "";
+        boolean shouldTrim = false;
         CombineNodeList list = new CombineNodeList("\n");
         while(line != null){
             if( isEndToken(line, endToken) ){
                 currentNodeList = null;
                 endToken = "";
+                shouldTrim = false;
             }else if(!isBlank(line)){
+                if(shouldTrim){
+                    line = line.trim();
+                }
                 if (currentNodeList != null) {
                     ConjureTemplateNode node = null;
                     if (currentNodeList instanceof ChooseByWeightNodeList) {
@@ -52,6 +57,7 @@ public class ConjureTemplateParser {
                     if (nodeAsNodeList != null && nodeAsNodeList.isEmpty()) {
                         currentNodeList = nodeAsNodeList;
                         endToken = parseEndToken(line, template);
+                        shouldTrim = parseTrim(line, template);
                         list.add(node);
                     } else {
                         list.add(node);
@@ -66,16 +72,20 @@ public class ConjureTemplateParser {
         return template;
     }
 
+    private boolean parseTrim(String line, ConjureTemplate template) {
+        Map config = template.parseFirstConfig(line);
+        if(config.containsKey("trim")){
+            return (Boolean)config.get("trim");
+        }
+        return false;
+    }
+
     private NodeList unwrapNodeList(ConjureTemplateNode node) {
         ConjureTemplateNode unwrapped = unwrapNode(node);
         if(unwrapped instanceof NodeList){
             return (NodeList) unwrapped;
         }
         return null;
-    }
-
-    private boolean isNodeList(ConjureTemplateNode node) {
-        return unwrapNode(node) instanceof NodeList;
     }
 
     private ConjureTemplateNode unwrapNode(ConjureTemplateNode node){

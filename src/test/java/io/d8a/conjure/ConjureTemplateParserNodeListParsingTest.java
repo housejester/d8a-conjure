@@ -82,6 +82,26 @@ public class ConjureTemplateParserNodeListParsingTest {
         assertEquals(template.conjure(), "three");
     }
 
+    public void canSpecifyLinesShouldBeTrimmed() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        ConjureTemplate template = parser.parse(toInputStream("${type:\"cycle\",trim:true}\n   one   \n   two  \n\t three\t"));
+        assertEquals(template.conjure(), "one");
+        assertEquals(template.conjure(), "two");
+        assertEquals(template.conjure(), "three");
+
+        assertEquals(template.conjure(), "one");
+        assertEquals(template.conjure(), "two");
+        assertEquals(template.conjure(), "three");
+    }
+
+    public void canSpecifyLinesShouldBeTrimmedForCombineNodes() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        ConjureTemplate template = parser.parse(toInputStream("${type:\"combine\",trim:true,separator:\",\"}\n   one   \n   two  \n\t three\t"));
+        assertEquals(template.conjure(), "one,two,three");
+
+        assertEquals(template.conjure(), "one,two,three");
+    }
+
     private InputStream toInputStream(String text) {
         return new ByteArrayInputStream(text.getBytes());
     }
