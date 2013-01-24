@@ -102,6 +102,28 @@ public class ConjureTemplateParserNodeListParsingTest {
         assertEquals(template.conjure(), "one,two,three");
     }
 
+    public void canSpecifyCustomDelimiter() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        ConjureTemplate template = parser.parse(toInputStream("${type:\"cycle\",delimiter:\",\"}\none,two,three"));
+
+        assertEquals(template.conjure(), "one");
+        assertEquals(template.conjure(), "two");
+        assertEquals(template.conjure(), "three");
+
+        assertEquals(template.conjure(), "one");
+        assertEquals(template.conjure(), "two");
+        assertEquals(template.conjure(), "three");
+    }
+
+    public void canSpecifyCustomDelimiterAndSeparator() throws IOException {
+        ConjureTemplateParser parser = new ConjureTemplateParser();
+        ConjureTemplate template = parser.parse(toInputStream("${type:\"combine\",separator:\":\",delimiter:\",\"}\none,two,three"));
+
+        assertEquals(template.conjure(), "one:two:three");
+
+        assertEquals(template.conjure(), "one:two:three");
+    }
+
     private InputStream toInputStream(String text) {
         return new ByteArrayInputStream(text.getBytes());
     }

@@ -32,6 +32,7 @@ public class ConjureTemplateParser {
         String line = reader.readLine();
         NodeList currentNodeList = null;
         String endToken = "";
+        String delimiter = "\n";
         boolean shouldTrim = false;
         CombineNodeList list = new CombineNodeList("\n");
         while(line != null){
@@ -39,18 +40,25 @@ public class ConjureTemplateParser {
                 currentNodeList = null;
                 endToken = "";
                 shouldTrim = false;
+                delimiter = "\n";
             }else if(!isBlank(line)){
                 if(shouldTrim){
                     line = line.trim();
                 }
                 if (currentNodeList != null) {
-                    ConjureTemplateNode node = null;
-                    if (currentNodeList instanceof ChooseByWeightNodeList) {
-                        node = ((ChooseByWeightNodeList) currentNodeList).parseWeightedNode(line, template);
-                    } else {
-                        node = template.parseNodes(line);
+                    String[] items = new String[]{line};
+                    if(!delimiter.equals("\n")){
+                        items = line.split(delimiter);
                     }
-                    currentNodeList.add(node);
+                    for(String item : items){
+                        ConjureTemplateNode node = null;
+                        if (currentNodeList instanceof ChooseByWeightNodeList) {
+                            node = ((ChooseByWeightNodeList) currentNodeList).parseWeightedNode(item, template);
+                        } else {
+                            node = template.parseNodes(item);
+                        }
+                        currentNodeList.add(node);
+                    }
                 } else {
                     ConjureTemplateNode node = template.parseNodes(line);
                     NodeList nodeAsNodeList = unwrapNodeList(node);
@@ -58,6 +66,7 @@ public class ConjureTemplateParser {
                         currentNodeList = nodeAsNodeList;
                         endToken = parseEndToken(line, template);
                         shouldTrim = parseTrim(line, template);
+                        delimiter = parseDelimiter(line, template);
                         list.add(node);
                     } else {
                         list.add(node);
@@ -78,6 +87,14 @@ public class ConjureTemplateParser {
             return (Boolean)config.get("trim");
         }
         return false;
+    }
+
+    private String parseDelimiter(String line, ConjureTemplate template) {
+        Map config = template.parseFirstConfig(line);
+        if(config.containsKey("delimiter")){
+            return (String)config.get("delimiter");
+        }
+        return "\n";
     }
 
     private NodeList unwrapNodeList(ConjureTemplateNode node) {
