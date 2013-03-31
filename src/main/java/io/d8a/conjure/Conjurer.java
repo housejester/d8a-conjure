@@ -111,7 +111,7 @@ public class Conjurer implements Runnable{
         Conjurer conjurer = new Conjurer(startTime, stopTime, printer, linesPerSec, numLines, filePath);
         conjurer.exhaust();
         long duration = System.currentTimeMillis() - start;
-        System.out.println("Conjurer finished.  Took " + duration + "ms to conjure up " + conjurer.getCount()+" samples.");
+        System.err.println("Conjurer finished.  Took " + duration + "ms to conjure up " + conjurer.getCount()+" samples.");
     }
 
     public void exhaust(){
@@ -176,9 +176,9 @@ public class Conjurer implements Runnable{
         long bytesPerSec = (long)(1000 * ((double)bytesPrinted)/duration);
         long bytesPerMin = (long)(60000 * ((double)bytesPrinted)/duration);
 
-        System.out.println("generated "+linesPrinted+" lines in "+duration+"ms (using the "+clock.getName()+"), "+ratePerSec+"/s.  ");
-        System.out.println("bytes/sec: "+bytesPerSec+", bytes/min: "+bytesPerMin);
-        System.out.println("Last: "+lastLinePrinted);
+        System.err.println("generated "+linesPrinted+" lines in "+duration+"ms (using the "+clock.getName()+"), "+ratePerSec+"/s.  ");
+        System.err.println("bytes/sec: "+bytesPerSec+", bytes/min: "+bytesPerMin);
+        System.err.println("Last: "+lastLinePrinted);
     }
 
     private void throttle(long start, long lineNumber, double linesPerMs){
