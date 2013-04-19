@@ -25,6 +25,7 @@ public class ConjureTemplateParser {
         template.addNodeType("cycle", ChooseInOrderNodeList.class);
         template.addNodeType("combine", CombineNodeList.class);
         template.addNodeType("weighted", ChooseByWeightNodeList.class);
+        template.addNodeType("increment", IncrementNode.class);
     }
 
     public ConjureTemplate parse(InputStream inputStream) throws IOException {
