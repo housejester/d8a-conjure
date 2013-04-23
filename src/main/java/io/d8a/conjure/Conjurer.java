@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 public class Conjurer implements Runnable{
     private static final Random RAND = new Random();
@@ -88,20 +86,17 @@ public class Conjurer implements Runnable{
         }
 
         Printer printer = consolePrinter();
-        if ("kafka".equals(cmd.getOptionValue("out"))) {
-            if (cmd.hasOption("zk") && cmd.hasOption("topic")) {
-                printer = kafkaPrinter(cmd.getOptionValue("zk"), cmd.getOptionValue("topic"));
-            } else {
-                throw new IllegalArgumentException("Must specify zookeeper connection string ('zk') and kafka topic ('topic') to write to kafka.");
+        if(cmd.hasOption("out")){
+            Set<String> outs = new HashSet<String>(Arrays.asList(cmd.getOptionValue("out").split(",")));
+            List<Printer> printers = new ArrayList<Printer>();
+            for(String out : outs){
+                printers.add(createPrinter(out, cmd));
             }
-        } else if ("file".equals(cmd.getOptionValue("out"))) {
-            if(cmd.hasOption("file")){
-                printer = filePrinter(cmd.getOptionValue("file"));
-            } else {
-                throw new IllegalArgumentException("Must specify file path to write to a file.");
+            if(printers.size() == 1){
+                printer = printers.get(0);
+            }else{
+                printer = new MultiPrinter(printers.toArray(new Printer[printers.size()]));
             }
-        } else if ("none".equals(cmd.getOptionValue("out"))) {
-            printer = nonePrinter();
         }
 
         int linesPerSec = 10;
@@ -120,6 +115,29 @@ public class Conjurer implements Runnable{
         conjurer.exhaust();
         long duration = System.currentTimeMillis() - start;
         System.err.println("Conjurer finished.  Took " + duration + "ms to conjure up " + conjurer.getCount()+" samples.");
+    }
+
+    private static Printer createPrinter(String type, CommandLine cmd) {
+        if ("kafka".equals(type)) {
+            if (cmd.hasOption("zk") && cmd.hasOption("topic")) {
+                return kafkaPrinter(cmd.getOptionValue("zk"), cmd.getOptionValue("topic"));
+            }
+            throw new IllegalArgumentException("Must specify zookeeper connection string ('zk') and kafka topic ('topic') to write to kafka.");
+        } else if ("file".equals(type)) {
+            if(cmd.hasOption("file")){
+                try {
+                    return filePrinter(cmd.getOptionValue("file"));
+                } catch (FileNotFoundException e) {
+                    throw new IllegalArgumentException("Could not create file printer.", e);
+                }
+            }
+            throw new IllegalArgumentException("Must specify file path to write to a file.");
+        } else if ("console".equals(type)) {
+            return consolePrinter();
+        } else if ("none".equals(type)) {
+            return nonePrinter();
+        }
+        throw new IllegalArgumentException("Printer type '"+type+"' not supported.");
     }
 
     private static Printer filePrinter(String fileName) throws FileNotFoundException {
