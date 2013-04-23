@@ -18,7 +18,7 @@ public class SimulatedClock implements Clock {
     }
 
     @Override
-    public String getName() {
+    public String toString() {
         return "Simulated Clock";
     }
 }

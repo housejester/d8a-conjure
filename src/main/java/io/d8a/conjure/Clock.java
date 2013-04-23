@@ -15,12 +15,10 @@ public interface Clock {
             }catch(InterruptedException ex){
             }
         }
-        public String getName(){
+        public String toString(){
             return "System Clock";
         }
     };
     long currentTimeMillis();
     void sleep(long millis);
-
-    String getName();
 }

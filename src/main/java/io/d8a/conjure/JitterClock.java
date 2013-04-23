@@ -24,7 +24,7 @@ public class JitterClock implements Clock {
     }
 
     @Override
-    public String getName() {
+    public String toString() {
         return "Jitter";
     }
 }

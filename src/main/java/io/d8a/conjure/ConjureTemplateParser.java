@@ -54,7 +54,7 @@ public class ConjureTemplateParser {
                     for(String item : items){
                         ConjureTemplateNode node = null;
                         if (currentNodeList instanceof ChooseByWeightNodeList) {
-                            node = ((ChooseByWeightNodeList) currentNodeList).parseWeightedNode(item, template);
+                            node = ChooseByWeightNodeList.parseWeightedNode(item, template);
                         } else {
                             node = template.parseNodes(item);
                         }

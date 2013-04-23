@@ -25,7 +25,8 @@ class KafkaPrinter implements Printer {
         producer.send(data);
     }
 
-    public String getName(){
+    @Override
+    public String toString(){
         return "Kafka topic '"+topic+"'";
     }
 }

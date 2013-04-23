@@ -1,13 +1,12 @@
 package io.d8a.conjure;
 
-public class ConsolePrinter implements Printer{
-    @Override
-    public void print(String message) {
-        System.out.println(message);
+public class ConsolePrinter extends StreamPrinter{
+    public ConsolePrinter(){
+        super(System.out);
     }
 
     @Override
-    public String getName() {
-        return "Console";
+    public String toString() {
+        return "ConsolePrinter";
     }
 }

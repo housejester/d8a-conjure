@@ -1,12 +1,14 @@
 package io.d8a.conjure;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.*;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
 
 public class Conjurer implements Runnable{
     private static final Random RAND = new Random();
@@ -54,10 +56,10 @@ public class Conjurer implements Runnable{
         options.addOption("template", true, "Path to the Conjure Template file that describes the data to generate");
         options.addOption("rate", true, "Lines per second");
         options.addOption("cap", true, "Total lines to generate");
-        options.addOption("out", true, "Where to write the generated samples.  [kafka|console|none]");
+        options.addOption("out", true, "Where to write the generated samples.  [file|console|kafka|none]");
+        options.addOption("file", true, "Filename to write generated samples to.");
         options.addOption("startTime", true, "For historical data generation.  What epoch time to start generating data from.");
         options.addOption("stopTime", true, "For historical data generation.  What epoch time to stop generating data.");
-
         CommandLineParser parser = new PosixParser();
         CommandLine cmd = parser.parse(options, args);
 
@@ -92,6 +94,12 @@ public class Conjurer implements Runnable{
             } else {
                 throw new IllegalArgumentException("Must specify zookeeper connection string ('zk') and kafka topic ('topic') to write to kafka.");
             }
+        } else if ("file".equals(cmd.getOptionValue("out"))) {
+            if(cmd.hasOption("file")){
+                printer = filePrinter(cmd.getOptionValue("file"));
+            } else {
+                throw new IllegalArgumentException("Must specify file path to write to a file.");
+            }
         } else if ("none".equals(cmd.getOptionValue("out"))) {
             printer = nonePrinter();
         }
@@ -114,6 +122,10 @@ public class Conjurer implements Runnable{
         System.err.println("Conjurer finished.  Took " + duration + "ms to conjure up " + conjurer.getCount()+" samples.");
     }
 
+    private static Printer filePrinter(String fileName) throws FileNotFoundException {
+        return new FilePrinter(new File(fileName));
+    }
+
     public void exhaust(){
         Thread thread = new Thread(this);
         thread.start();
@@ -124,7 +136,7 @@ public class Conjurer implements Runnable{
     }
 
     public void run(){
-        System.err.println("Conjuring data to "+ printer.getName() +" at a rate of "+linesPerSec+" lines per second.");
+        System.err.println("Conjuring data to "+ printer +" at a rate of "+linesPerSec+" lines per second.");
         double linesPerMs = (double)linesPerSec / 1000;
 
         long start = clock.currentTimeMillis();
@@ -163,7 +175,7 @@ public class Conjurer implements Runnable{
             @Override
             public void print(String message) {
             }
-            public String getName(){
+            public String toString(){
                 return "Blackhole";
             }
         };
@@ -176,7 +188,7 @@ public class Conjurer implements Runnable{
         long bytesPerSec = (long)(1000 * ((double)bytesPrinted)/duration);
         long bytesPerMin = (long)(60000 * ((double)bytesPrinted)/duration);
 
-        System.err.println("generated "+linesPrinted+" lines in "+duration+"ms (using the "+clock.getName()+"), "+ratePerSec+"/s.  ");
+        System.err.println("generated "+linesPrinted+" lines in "+duration+"ms (using the "+clock+"), "+ratePerSec+"/s.  ");
         System.err.println("bytes/sec: "+bytesPerSec+", bytes/min: "+bytesPerMin);
         System.err.println("Last: "+lastLinePrinted);
     }
