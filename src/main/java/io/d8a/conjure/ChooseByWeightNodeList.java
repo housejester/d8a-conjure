@@ -13,70 +13,79 @@ import java.util.Random;
  * 10%.  So we can expect that when we call generate on the node list 2000 times, we should see about 200 of
  * them be for our node 'n' of weight 40.
  */
-public class ChooseByWeightNodeList extends NodeList{
-    private static final Random RAND = new Random();
+public class ChooseByWeightNodeList extends NodeList
+{
+  private static final Random RAND = new Random();
 
-    private List<Integer> weightTiers = new ArrayList<Integer>();
-    private int sumOfWeights = 0;
+  private List<Integer> weightTiers = new ArrayList<Integer>();
+  private int sumOfWeights = 0;
 
-    public void add(ConjureTemplateNode node, int weight){
-        add(new WeightedNode(node, weight));
+  public void add(ConjureTemplateNode node, int weight)
+  {
+    add(new WeightedNode(node, weight));
+  }
+
+  @Override
+  protected void generateNonEmpty(StringBuilder buff)
+  {
+    updateWeights();
+    int ticket = RAND.nextInt(sumOfWeights);
+    for (int i = 0; i < weightTiers.size(); i++) {
+      if (ticket < weightTiers.get(i)) {
+        nodes.get(i).generate(buff);
+        return;
+      }
     }
+  }
 
-    @Override
-    protected void generateNonEmpty(StringBuilder buff) {
-        updateWeights();
-        int ticket = RAND.nextInt(sumOfWeights);
-        for(int i=0; i< weightTiers.size(); i++){
-            if(ticket < weightTiers.get(i)){
-                nodes.get(i).generate(buff);
-                return;
-            }
-        }
-    }
+  public int getSumOfWeights()
+  {
+    return sumOfWeights;
+  }
 
-    public int getSumOfWeights() {
-        return sumOfWeights;
+  private void updateWeights()
+  {
+    if (nodes.size() != weightTiers.size()) {
+      for (int i = weightTiers.size(); i < nodes.size(); i++) {
+        sumOfWeights += getNodeWeight(nodes.get(i));
+        weightTiers.add(sumOfWeights);
+      }
     }
+  }
 
-    private void updateWeights() {
-        if(nodes.size() != weightTiers.size()){
-            for(int i= weightTiers.size(); i<nodes.size(); i++){
-                sumOfWeights += getNodeWeight(nodes.get(i));
-                weightTiers.add(sumOfWeights);
-            }
-        }
+  private int getNodeWeight(ConjureTemplateNode node)
+  {
+    if (node instanceof WeightedNode) {
+      return ((WeightedNode) node).getWeight();
     }
+    return 1;
+  }
 
-    private int getNodeWeight(ConjureTemplateNode node) {
-        if(node instanceof WeightedNode){
-            return ((WeightedNode)node).getWeight();
-        }
-        return 1;
+  public static ChooseByWeightNodeList createNode(Map config, ConjureTemplate template)
+  {
+    ChooseByWeightNodeList nodes = new ChooseByWeightNodeList();
+    List list = (List) config.get("list");
+    if (list != null) {
+      for (Object obj : list) {
+        nodes.add(parseWeightedNode(String.valueOf(obj), template));
+      }
     }
+    return nodes;
+  }
 
-    public static ChooseByWeightNodeList createNode(Map config, ConjureTemplate template) {
-        ChooseByWeightNodeList nodes = new ChooseByWeightNodeList();
-        List list = (List)config.get("list");
-        if(list != null){
-            for(Object obj : list){
-                nodes.add(parseWeightedNode(String.valueOf(obj), template));
-            }
-        }
-        return nodes;
+  public static ConjureTemplateNode parseWeightedNode(String line, ConjureTemplate template)
+  {
+    int weight = 1;
+    int index = line.indexOf(':');
+    if (index != -1) {
+      try {
+        weight = new Integer(line.substring(0, index).trim());
+        line = line.substring(index + 1);
+      }
+      catch (Exception ex) {
+      }
     }
-
-    public static ConjureTemplateNode parseWeightedNode(String line, ConjureTemplate template) {
-        int weight = 1;
-        int index = line.indexOf(':');
-        if(index != -1){
-            try{
-                weight = new Integer(line.substring(0, index).trim());
-                line = line.substring(index+1);
-            }catch(Exception ex){
-            }
-        }
-        ConjureTemplateNode node = template.parseNodes(line);
-        return new WeightedNode(node, weight);
-    }
+    ConjureTemplateNode node = template.parseNodes(line);
+    return new WeightedNode(node, weight);
+  }
 }

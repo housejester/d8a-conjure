@@ -1,0 +1,22 @@
+{
+   "columns":10,
+   "cardinalityRequirements":{
+      "10":2,
+      "1":2,
+      "100":1
+   },
+   "typeRequirements":{
+	   "string":2,
+	   "double":2
+   },
+   "aggregators":[],
+   "defaultCardinality":10,
+   "defaultType":"int",
+   "special column list": [
+	   {
+		   "name":"Producers",
+		   "cardinality": 5,
+		   "type": "string"
+	   }
+   ]
+}
