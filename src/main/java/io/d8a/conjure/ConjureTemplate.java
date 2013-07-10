@@ -13,7 +13,7 @@ import java.util.Map;
 public class ConjureTemplate
 {
   private Map<String, ConjureTemplateNode> nodes;
-  private CardinalityNodeList list;
+  private CardinalityNodeList variableList;
   private Map<String, Method> typeRegistry;
   private Clock clock;
   private String refOpenToken = "${";
@@ -44,7 +44,7 @@ public class ConjureTemplate
     this.refOpenToken = openToken;
     this.refCloseToken = closeToken;
     this.namedNodeValueCache = new HashMap<String, String>();
-    this.list = new CardinalityNodeList();
+    this.variableList = new CardinalityNodeList();
   }
 
   public Clock getClock()
@@ -85,9 +85,9 @@ public class ConjureTemplate
     return conjure("sample");
   }
 
-  public Map<String,Object> conjureJsonData()
+  public Map<String,Object> conjureMapData()
   {
-    return list.generateJson();
+    return variableList.generateMap();
   }
 
   public ConjureTemplateNode getNode(String name)
@@ -121,9 +121,9 @@ public class ConjureTemplate
     typeRegistry.put(typeName, creator);
   }
 
-  public void setList(CardinalityNodeList list)
+  public void setVariableList(CardinalityNodeList list)
   {
-    this.list = list;
+    this.variableList = list;
   }
 
   private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException

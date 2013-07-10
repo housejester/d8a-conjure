@@ -5,22 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class DataConstructor
 {
-  private int numcolumns;
-  private int numcolumnsCreated = 0;
+  private Logger log;
+  private int numColumns;
+  private int numColumnsCreated = 0;
   private Map<String, Integer> cardinalityRequirements;
   private Map<String, Integer> typeRequirements;
   private List<String> aggregators;
-  List<NodeBuilder> builderList = Lists.newArrayList();
+  ArrayList<NodeBuilder> builderList = Lists.newArrayList();
   private final int defaultCardinality;
   private final String defaultType;
-  private Map<String, Integer> typeNodesCreated = new HashMap<String, Integer>();
+  private Map<String, Integer> numNodesOfEachType = new HashMap<String, Integer>();
   private List<SpecialColumn> specialColumnList;
 
   @JsonCreator
@@ -34,7 +37,7 @@ public class DataConstructor
       @JsonProperty("special column list") List<SpecialColumn> specialColumnList
   )
   {
-    this.numcolumns = numcolumns;
+    this.numColumns = numcolumns;
     this.cardinalityRequirements = cardinalityRequirements;
     this.typeRequirements = typeRequirements;
     this.aggregators = aggregators;
@@ -43,23 +46,17 @@ public class DataConstructor
     this.specialColumnList = specialColumnList;
   }
 
-  public CardinalityNodeList createNodes() throws Exception
+  public CardinalityNodeList createNodes()
   {
     CardinalityNodeList nodeList = new CardinalityNodeList();
-    try {
-      validateArguments();
-      addTypeRequirements();
-      addMetricRequirements();
-      addAllcolumnBuilders();
-      addCardinalityRequirements();
-      addSpecialColumns();
-      for (NodeBuilder builder : builderList) {
-        nodeList.addNode(builder.build());
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      Throwables.propagate(e);
+    validateArguments();
+    addAllColumnBuilders();
+    addTypeRequirements();
+    addCardinalityRequirements();
+    addMetricRequirements();
+    addSpecialColumns();
+    for (NodeBuilder builder : builderList) {
+      nodeList.addNode(builder.build());
     }
     return nodeList;
   }
@@ -67,25 +64,14 @@ public class DataConstructor
 
   private void addTypeRequirements()
   {
+    int j=0;
     for (String type : typeRequirements.keySet()) {
-      for (int i = 0; i < typeRequirements.get(type); i++) {
-        addRelevantBuilder(type);
+      int numColumnsToCreate = typeRequirements.get(type);
+      for (int i = 0; i < numColumnsToCreate; i++) {
+        //builderList is always an ArrayList so this inner loop should be O(n)
+        builderList.get(j+i).setType(type);
       }
-    }
-  }
-
-  private void addSpecialColumns() throws IllegalArgumentException
-  {
-    for (SpecialColumn col : specialColumnList) {
-      NodeBuilder builder = getCorrectTypeBuilder(col.getType(), col.getName());
-      try {
-        builder.setCardinality(col.getCardinality());
-        builderList.add(builder);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        Throwables.propagate(e);
-      }
+      j+=numColumnsToCreate;
     }
   }
 
@@ -93,37 +79,52 @@ public class DataConstructor
   {
     int j = 0;
     for (String cardinality : cardinalityRequirements.keySet()) {
-      for (int k = 0; k < cardinalityRequirements.get(cardinality).intValue(); k++) {
+      int numColumnsToCreate = cardinalityRequirements.get(cardinality).intValue();
+      for (int k = 0; k < numColumnsToCreate; k++) {
         try {
-          builderList.get(j).setCardinality(Integer.parseInt(cardinality));
+          builderList.get(j+k).setCardinality(Integer.parseInt(cardinality));
         }
         catch (Exception e) {
-          e.printStackTrace();
           Throwables.propagate(e);
         }
-        j++;
       }
+      j+=numColumnsToCreate;
     }
   }
+
+
+  private void addSpecialColumns() throws IllegalArgumentException
+  {
+    for (SpecialColumn col : specialColumnList) {
+      addBuilder(col.getType(),col.getCardinality(),col.getName());
+    }
+  }
+
+  public void addBuilder(String type, int cardinality, String name){
+    builderList.add(new NodeBuilder(type,cardinality,name));
+    numColumnsCreated++;
+    updateTypesCreated(type);
+  }
+
 
   private void addMetricRequirements() throws IllegalArgumentException
   {
     for (String aggregator : aggregators) {
       if (aggregator.equals("longsum")) {
-        if (typeNodesCreated.get("long").intValue() == 0) {
-          addRelevantBuilder("long");
-          System.out.println("Creating column of type long for the longsum aggregator");
+        if (numNodesOfEachType.get("long").intValue() == 0) {
+          addBuilder("long",defaultCardinality,"column"+numColumnsCreated);
+          log.info("Creating column of type long for the longsum aggregator");
         }
       } else if (aggregator.equals("doublesum")) {
-        if (typeNodesCreated.get("double").intValue() == 0) {
-          addRelevantBuilder("double");
-          System.out.println("Creating column of type long for the doublesum aggregator");
+        if (numNodesOfEachType.get("double").intValue() == 0) {
+          addBuilder("double", defaultCardinality, "column" + numColumnsCreated);
+          log.info("Creating column of type long for the doublesum aggregator");
         }
       } else if (aggregator.equals("min") || aggregator.equals("max")) {
-        if (typeNodesCreated.get("int") == 0
-            && typeNodesCreated.get("double") == 0
-            && typeNodesCreated.get("long") == 0) {
-          addRelevantBuilder("long");
+        if (numNodesOfEachType.get("int") == 0
+            && numNodesOfEachType.get("double") == 0
+            && numNodesOfEachType.get("long") == 0) {
+          addBuilder("int", defaultCardinality, "column" + numColumnsCreated);
         }
       } else {
         throw new IllegalArgumentException("Invalid Aggregator");
@@ -131,50 +132,21 @@ public class DataConstructor
     }
   }
 
-  private void addAllcolumnBuilders()
+  private void addAllColumnBuilders()
   {
-    for (int i = numcolumnsCreated; i < numcolumns; i++) {
-      addRelevantBuilder(defaultType);
+    for (int i = numColumnsCreated; i < numColumns; i++) {
+      addBuilder(defaultType, defaultCardinality, "column" + numColumnsCreated);
     }
   }
 
-
-  public void addRelevantBuilder(String type) throws IllegalArgumentException
-  {
-    try {
-      builderList.add(getCorrectTypeBuilder(type, "column" + numcolumnsCreated));
-      updateTypesCreated(type);
-      numcolumnsCreated++;
-    }
-    catch (Exception e) {
-      Throwables.propagate(e);
-    }
-  }
-
-  public NodeBuilder getCorrectTypeBuilder(String type, String name) throws IllegalArgumentException
-  {
-    NodeBuilder builder;
-    if (type.equals("long")) {
-      builder = new LongNodeBuilder(defaultCardinality, name);
-    } else if (type.equals("int")) {
-      builder = new IntNodeBuilder(defaultCardinality, name);
-    } else if (type.equals("double")) {
-      builder = new DoubleNodeBuilder(defaultCardinality, name);
-    } else if (type.equals("string")) {
-      builder = new StringNodeBuilder(defaultCardinality, name);
-    } else {
-      throw new IllegalArgumentException("Incorrect type specified: " + type);
-    }
-    return builder;
-  }
 
   private void updateTypesCreated(String type)
   {
-    Integer numberOfNodes = typeNodesCreated.get(type);
+    Integer numberOfNodes = numNodesOfEachType.get(type);
     if (numberOfNodes != null) {
-      typeNodesCreated.put(type, new Integer(numberOfNodes.intValue() + 1));
+      numNodesOfEachType.put(type, new Integer(numberOfNodes.intValue() + 1));
     } else {
-      typeNodesCreated.put(type, new Integer(1));
+      numNodesOfEachType.put(type, new Integer(1));
     }
   }
 
@@ -208,7 +180,7 @@ public class DataConstructor
 
       typeColumnsSpecified = typeColumnsSpecified + typeRequirements.get(type);
     }
-    if (numcolumns < typeColumnsSpecified + cardinalityColumnsSpecified) {
+    if (numColumns < typeColumnsSpecified + cardinalityColumnsSpecified) {
       throw new IllegalArgumentException(
           "Number of columns specified less than the number of specifications provided through cardinality and type"
       );

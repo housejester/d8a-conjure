@@ -1,7 +1,6 @@
 package io.d8a.conjure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,15 +40,7 @@ public class ConjureTemplateParser
     ObjectMapper mapper = new ObjectMapper();
     File file = new File(filePath);
     DataConstructor dc = mapper.readValue(file, DataConstructor.class);
-    CardinalityNodeList list = new CardinalityNodeList();
-    try {
-      list = dc.createNodes();
-    }
-    catch (Exception e) {
-      Throwables.propagate(e);
-    }
-    //template.addNode("sample",list);
-    template.setList(list);
+    template.setVariableList(dc.createNodes());
     return template;
   }
 

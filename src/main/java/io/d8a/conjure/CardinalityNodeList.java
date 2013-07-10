@@ -40,10 +40,10 @@ public class CardinalityNodeList implements ConjureTemplateNode
   @Override
   public StringBuilder generate(StringBuilder buff)
   {
-    return buff.append(generateJson());
+    return buff.append(generateMap().toString());
   }
 
-  public Map<String,Object> generateJson(){
+  public Map<String,Object> generateMap(){
     for (VariableWithCardinality variable : cardinalityNodes) {
       jsonMap.put(variable.getName(), variable.getValue());
     }

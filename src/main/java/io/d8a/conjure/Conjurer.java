@@ -36,7 +36,7 @@ public class Conjurer implements Runnable
   private String filePath;
   private long count = 0;
   private ConjureTemplate template;
-  private boolean jsonMode = false;
+  private boolean customCardinalityVariablesMode = false;
   private final Thread thread = new Thread(this);
 
 
@@ -65,7 +65,7 @@ public class Conjurer implements Runnable
     ConjureTemplateParser parser = new ConjureTemplateParser(clock);
     try {
       if (FilenameUtils.getExtension(filePath).equals("json")) {
-        jsonMode = true;
+        customCardinalityVariablesMode = true;
         this.template = parser.jsonParse(filePath);
       }
       this.template = parser.parse(new FileInputStream(filePath));
@@ -212,8 +212,8 @@ public class Conjurer implements Runnable
       if (Thread.currentThread().isInterrupted()) {
         return;
       }
-      if (jsonMode) {
-        Map<String,Object> map = template.conjureJsonData();
+      if (customCardinalityVariablesMode) {
+        Map<String,Object> map = template.conjureMapData();
         printer.print(map);
       } else {
         if (linesIterator == null || !linesIterator.hasNext()) {
