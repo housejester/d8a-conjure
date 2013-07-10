@@ -26,9 +26,10 @@ public class ConjurerBuilder
   private int linesPerSec=10;
   private long maxLines=Long.MAX_VALUE;
   private final String filePath;
+  private boolean customCardinalityVariablesMode=false;
 
 
-  public ConjurerBuilder(Long startTime, Long stopTime, Printer printer, Integer linesPerSec, Long maxLines, String filePath){
+  public ConjurerBuilder(Long startTime, Long stopTime, Printer printer, Integer linesPerSec, Long maxLines, String filePath, Boolean customCardinalityVariablesMode){
     if (startTime!=null){
       this.startTime=startTime;
     }
@@ -45,6 +46,7 @@ public class ConjurerBuilder
       this.maxLines = maxLines;
     }
     this.filePath = filePath;
+    this.customCardinalityVariablesMode=customCardinalityVariablesMode;
   }
 
   public void setPrinter(Printer printer){
@@ -52,6 +54,6 @@ public class ConjurerBuilder
   }
 
   public Conjurer build(){
-    return new Conjurer(startTime,stopTime,printer,linesPerSec,maxLines,filePath);
+    return new Conjurer(startTime,stopTime,printer,linesPerSec,maxLines,filePath,customCardinalityVariablesMode);
   }
 }

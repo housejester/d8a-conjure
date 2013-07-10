@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -52,6 +51,21 @@ public class Conjurer implements Runnable
 
   public Conjurer(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath)
   {
+    this(startTime, stopTime, printer, linesPerSec, maxLines, filePath, false);
+  }
+
+
+  public Conjurer(
+      long startTime,
+      long stopTime,
+      Printer printer,
+      int linesPerSec,
+      long maxLines,
+      String filePath,
+      Boolean customCardinalityMode
+  )
+  {
+    this.customCardinalityVariablesMode = customCardinalityMode;
     this.stopTime = stopTime;
     this.printer = printer;
     this.linesPerSec = linesPerSec;
@@ -65,7 +79,6 @@ public class Conjurer implements Runnable
     ConjureTemplateParser parser = new ConjureTemplateParser(clock);
     try {
       if (FilenameUtils.getExtension(filePath).equals("json")) {
-        customCardinalityVariablesMode = true;
         this.template = parser.jsonParse(filePath);
       }
       this.template = parser.parse(new FileInputStream(filePath));
@@ -212,18 +225,18 @@ public class Conjurer implements Runnable
       if (Thread.currentThread().isInterrupted()) {
         return;
       }
-      if (customCardinalityVariablesMode) {
-        Map<String,Object> map = template.conjureMapData();
-        printer.print(map);
-      } else {
+      Object event;
+      if (customCardinalityVariablesMode)
+      {
+        event = template.conjureMapData();
+      }
+      else {
         if (linesIterator == null || !linesIterator.hasNext()) {
           linesIterator = conjureNextBatch();
         }
-        String str = linesIterator.next();
-        bytesWritten += str.length();
-        printer.print(str);
-        lastLinePrinted = str;
+        event = linesIterator.next();
       }
+      printer.print(event);
       ++count;
       if (System.currentTimeMillis() - lastReport > 5000) {
         report(start, count, lastLinePrinted, bytesWritten);
@@ -257,7 +270,9 @@ public class Conjurer implements Runnable
       }
     };
   }
-  private void report(long start, long linesPrinted){
+
+  private void report(long start, long linesPrinted)
+  {
     long now = clock.currentTimeMillis();
     long duration = now - start;
     long ratePerSec = (long) (1000 * ((double) linesPrinted) / duration);
@@ -321,8 +336,9 @@ public class Conjurer implements Runnable
     return new KafkaPrinter(zkString, topic);
   }
 
-  public static Printer queuePrinter(BlockingQueue<Object> queue){
-    return new QueuePrinter(queue,waitTime,unit);
+  public static Printer queuePrinter(BlockingQueue<Object> queue)
+  {
+    return new QueuePrinter(queue, waitTime, unit);
   }
 
   public static Printer consolePrinter()
