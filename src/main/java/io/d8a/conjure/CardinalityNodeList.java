@@ -1,6 +1,5 @@
 package io.d8a.conjure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -12,7 +11,6 @@ public class CardinalityNodeList implements ConjureTemplateNode
 {
   protected List<VariableWithCardinality> cardinalityNodes = Lists.newArrayList();
   private Map<String, Object> jsonMap = Maps.newHashMap();
-  private ObjectMapper mapper = new ObjectMapper();
   public CardinalityNodeList(List<VariableWithCardinality> nodes)
   {
     for (VariableWithCardinality node : nodes) {
@@ -26,11 +24,6 @@ public class CardinalityNodeList implements ConjureTemplateNode
 
   public void addNode(VariableWithCardinality node){
     cardinalityNodes.add(node);
-  }
-
-  public int getSize()
-  {
-    return cardinalityNodes.size();
   }
 
   public List<VariableWithCardinality> getNodes(){
@@ -49,5 +42,9 @@ public class CardinalityNodeList implements ConjureTemplateNode
     }
     jsonMap.put("time", System.currentTimeMillis());
     return jsonMap;
+  }
+
+  public int getSize(){
+    return cardinalityNodes.size();
   }
 }

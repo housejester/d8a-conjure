@@ -14,6 +14,9 @@ public class NodeBuilder
 
   public VariableWithCardinality build(){
     VariableWithCardinality variable;
+    if (cardinality<0){
+      throw new IllegalArgumentException("Cardinality can't be negative");
+    }
     if (type.equals("long")) {
       variable = new LongMetricNode(name,cardinality);
     } else if (type.equals("int")) {
@@ -28,16 +31,28 @@ public class NodeBuilder
     return variable;
   }
 
-  public void setCardinality(int newCardinality) throws Exception
+  public void setCardinality(int newCardinality)
   {
-    if (newCardinality > 0) {
-      cardinality = newCardinality;
-    } else {
-      throw new Exception("Cardinality can't be less than 0");
-    }
+    cardinality = newCardinality;
   }
 
   public void setType(String type){
     this.type=type;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getType()
+  {
+    return type;
+  }
+
+  public int getCardinality()
+  {
+
+    return cardinality;
   }
 }

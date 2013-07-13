@@ -17,7 +17,7 @@ public class DoubleMetricNode extends MetricNode implements ConjureTemplateNode
   @Override
   public Double getValue()
   {
-    return counter.nextValue()+0.1234d;
+    return (double)counter.nextValue()+0.1234d;
   }
 
   @Override

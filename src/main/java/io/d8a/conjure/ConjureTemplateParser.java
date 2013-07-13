@@ -39,8 +39,8 @@ public class ConjureTemplateParser
   {
     ObjectMapper mapper = new ObjectMapper();
     File file = new File(filePath);
-    DataConstructor dc = mapper.readValue(file, DataConstructor.class);
-    template.setVariableList(dc.createNodes());
+    CardinalityNodeListBuilder dc = mapper.readValue(file, CardinalityNodeListBuilder.class);
+    template.setVariableList(dc.build());
     return template;
   }
 
