@@ -18,12 +18,19 @@
  */
 package io.d8a.conjure;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName("schema")
 public class JsonSchema
 {
   private final ColumnSpec columnSpec;
   private final DefaultSpec defaults;
 
-  public JsonSchema(ColumnSpec columnSpec, DefaultSpec defaults)
+  @JsonCreator
+  public JsonSchema(@JsonProperty("columns") ColumnSpec columnSpec,
+                    @JsonProperty("defaults") DefaultSpec defaults)
   {
     this.columnSpec = columnSpec;
     this.defaults = defaults;
