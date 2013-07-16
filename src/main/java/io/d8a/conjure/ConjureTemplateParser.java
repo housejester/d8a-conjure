@@ -8,16 +8,16 @@ import java.util.Map;
 public class ConjureTemplateParser {
     ConjureTemplate template;
 
-    public ConjureTemplateParser(){
+    public ConjureTemplateParser() {
         this(Clock.SYSTEM_CLOCK);
     }
 
-    public ConjureTemplateParser(Clock clock){
+    public ConjureTemplateParser(Clock clock) {
         template = new ConjureTemplate(clock);
         registerStandardTypes();
     }
 
-    private void registerStandardTypes(){
+    private void registerStandardTypes() {
         template.addNodeType("time", TimeNode.class);
         template.addNodeType("minmax", MinMaxNode.class);
         template.addNodeType("randomChoice", ChooseRandomNodeList.class);
@@ -27,7 +27,7 @@ public class ConjureTemplateParser {
         template.addNodeType("increment", IncrementNode.class);
     }
 
-    public ConjureTemplate jsonParse(String filePath) throws IOException{
+    public ConjureTemplate jsonParse(String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File(filePath);
         CardinalityNodeListBuilder dc = mapper.readValue(file, CardinalityNodeListBuilder.class);
@@ -35,7 +35,7 @@ public class ConjureTemplateParser {
         return template;
     }
 
-    public ConjureTemplate parse(InputStream inputStream) throws IOException{
+    public ConjureTemplate parse(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         NodeList currentNodeList = null;
@@ -89,7 +89,7 @@ public class ConjureTemplateParser {
         return template;
     }
 
-    private boolean parseTrim(String line, ConjureTemplate template){
+    private boolean parseTrim(String line, ConjureTemplate template) {
         Map config = template.parseFirstConfig(line);
         if(config.containsKey("trim")){
             return (Boolean) config.get("trim");
@@ -97,7 +97,7 @@ public class ConjureTemplateParser {
         return false;
     }
 
-    private String parseDelimiter(String line, ConjureTemplate template){
+    private String parseDelimiter(String line, ConjureTemplate template) {
         Map config = template.parseFirstConfig(line);
         if(config.containsKey("delimiter")){
             return (String) config.get("delimiter");
@@ -105,7 +105,7 @@ public class ConjureTemplateParser {
         return "\n";
     }
 
-    private NodeList unwrapNodeList(ConjureTemplateNode node){
+    private NodeList unwrapNodeList(ConjureTemplateNode node) {
         ConjureTemplateNode unwrapped = unwrapNode(node);
         if(unwrapped instanceof NodeList){
             return (NodeList) unwrapped;
@@ -113,14 +113,14 @@ public class ConjureTemplateParser {
         return null;
     }
 
-    private ConjureTemplateNode unwrapNode(ConjureTemplateNode node){
+    private ConjureTemplateNode unwrapNode(ConjureTemplateNode node) {
         if(node instanceof MemoizingNode){
             return ((MemoizingNode) node).getTargetNode();
         }
         return node;
     }
 
-    private String parseEndToken(String line, ConjureTemplate template){
+    private String parseEndToken(String line, ConjureTemplate template) {
         Map config = template.parseFirstConfig(line);
         if(config.containsKey("endToken")){
             return (String) config.get("endToken");
@@ -128,11 +128,11 @@ public class ConjureTemplateParser {
         return "";
     }
 
-    private boolean isEndToken(String line, String endToken){
+    private boolean isEndToken(String line, String endToken) {
         return line.equals(endToken);
     }
 
-    private boolean isBlank(String line){
+    private boolean isBlank(String line) {
         String trimmed = line.trim();
         return trimmed.isEmpty() || trimmed.startsWith("#");
     }

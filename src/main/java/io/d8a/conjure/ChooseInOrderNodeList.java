@@ -8,15 +8,15 @@ public class ChooseInOrderNodeList extends NodeList {
 
     @Override
     protected void generateNonEmpty(StringBuilder buff){
-        if(next>=nodes.size()){
+        if(next >= nodes.size()){
             next = 0;
         }
         nodes.get(next++).generate(buff);
     }
 
-    public static ChooseInOrderNodeList createNode(Map config, ConjureTemplate template){
+    public static ChooseInOrderNodeList createNode(Map config, ConjureTemplate template) {
         ChooseInOrderNodeList nodes = new ChooseInOrderNodeList();
-        List list = (List) config.get("list");
+        List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
                 nodes.add(template.parseNodes(String.valueOf(obj)));

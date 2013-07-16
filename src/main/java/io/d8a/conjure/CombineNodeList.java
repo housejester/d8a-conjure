@@ -11,12 +11,12 @@ public class CombineNodeList extends NodeList {
         this(DEFAULT_SEPARATOR);
     }
 
-    public CombineNodeList(List<ConjureTemplateNode> nodes){
+    public CombineNodeList(List<ConjureTemplateNode> nodes) {
         this();
         add(nodes);
     }
 
-    public CombineNodeList(String separator){
+    public CombineNodeList(String separator) {
         super(true);
         this.separator = separator;
         if(this.separator == null){
@@ -30,17 +30,17 @@ public class CombineNodeList extends NodeList {
         for(ConjureTemplateNode node : nodes){
             if(first){
                 first = false;
-            } else{
+            }else{
                 buff.append(separator);
             }
             node.generate(buff);
         }
     }
 
-    public static CombineNodeList createNode(Map config, ConjureTemplate template){
-        String separator = (String) config.get("separator");
+    public static CombineNodeList createNode(Map config, ConjureTemplate template) {
+        String separator = (String)config.get("separator");
         CombineNodeList nodes = new CombineNodeList(separator);
-        List list = (List) config.get("list");
+        List list = (List)config.get("list");
         if(list != null){
             for(Object obj : list){
                 nodes.add(template.parseNodes(String.valueOf(obj)));
