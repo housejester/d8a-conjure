@@ -22,16 +22,16 @@ public class DefaultSpec{
     private final int cardinality;
     private final String type;
 
-    public DefaultSpec(int cardinality, String type){
-        this.cardinality = cardinality;
-        this.type = type;
+    public DefaultSpec(int cardinality, String type) {
+        this.cardinality=cardinality;
+        this.type=type;
     }
 
-    public int getCardinality(){
+    public int getCardinality() {
         return cardinality;
     }
 
-    public String getType(){
+    public String getType() {
         return type;
     }
 }

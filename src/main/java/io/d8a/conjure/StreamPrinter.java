@@ -8,23 +8,23 @@ import java.io.PrintStream;
 public class StreamPrinter implements Printer{
     private PrintStream out;
 
-    public StreamPrinter(PrintStream out){
-        this.out = out;
+    public StreamPrinter(PrintStream out) {
+        this.out=out;
     }
 
     @Override
-    public void print(Object message){
+    public void print(Object message) {
         out.println(message);
         out.checkError();
     }
 
-    public void close(){
+    public void close() {
         out.flush();
         out.close();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "StreamPrinter";
     }
 }

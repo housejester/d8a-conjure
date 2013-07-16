@@ -28,14 +28,14 @@ public class QueuePrinter implements Printer{
     long waitTime;
     TimeUnit unit;
 
-    public QueuePrinter(BlockingQueue<Object> queue, long waitTime, TimeUnit unit){
-        this.waitTime = waitTime;
-        this.unit = unit;
-        this.queue = queue;
+    public QueuePrinter(BlockingQueue<Object> queue, long waitTime, TimeUnit unit) {
+        this.waitTime=waitTime;
+        this.unit=unit;
+        this.queue=queue;
     }
 
     @Override
-    public void print(Object obj){
+    public void print(Object obj) {
         try{
             queue.offer(obj, waitTime, unit);
         } catch(InterruptedException e){

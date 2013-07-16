@@ -11,12 +11,12 @@ import java.io.PrintStream;
 public class FilePrinter extends StreamPrinter{
     private final String filePath;
 
-    public FilePrinter(File out) throws FileNotFoundException{
+    public FilePrinter(File out) throws FileNotFoundException {
         super(new PrintStream(new FileOutputStream(out, true), false));
-        filePath = out.getAbsolutePath();
+        filePath=out.getAbsolutePath();
     }
 
-    public String toString(){
+    public String toString() {
         return "FilePrinter:" + filePath;
     }
 

@@ -11,12 +11,12 @@ public class CardinalityNodeListBuilder{
     @JsonCreator
     public CardinalityNodeListBuilder(
             @JsonProperty("specs") List<Spec> specList
-    ){
-        this.specList = specList;
+    ) {
+        this.specList=specList;
     }
 
-    public CardinalityNodeList build() throws IllegalArgumentException{
-        CardinalityNodeList nodeList = new CardinalityNodeList();
+    public CardinalityNodeList build() throws IllegalArgumentException {
+        CardinalityNodeList nodeList=new CardinalityNodeList();
         for(Spec spec : specList){
             spec.addNodes(nodeList);
         }
