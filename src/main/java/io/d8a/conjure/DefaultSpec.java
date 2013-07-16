@@ -18,24 +18,20 @@
  */
 package io.d8a.conjure;
 
-public class DefaultSpec
-{
-  private final int cardinality;
-  private final String type;
+public class DefaultSpec {
+    private final int cardinality;
+    private final String type;
 
-  public DefaultSpec(int cardinality, String type)
-  {
-    this.cardinality = cardinality;
-    this.type = type;
-  }
+    public DefaultSpec(int cardinality, String type) {
+        this.cardinality = cardinality;
+        this.type = type;
+    }
 
-  public int getCardinality()
-  {
-    return cardinality;
-  }
+    public int getCardinality() {
+        return cardinality;
+    }
 
-  public String getType()
-  {
-    return type;
-  }
+    public String getType() {
+        return type;
+    }
 }
