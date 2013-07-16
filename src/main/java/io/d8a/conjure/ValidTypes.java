@@ -22,10 +22,10 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-public class ValidTypes {
+public class ValidTypes{
     private static final ImmutableList<String> validTypes = ImmutableList.of("double", "string", "int", "long");
 
-    public static List<String> getValidTypes() {
+    public static List<String> getValidTypes(){
         return validTypes;
     }
 }

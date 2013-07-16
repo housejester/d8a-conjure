@@ -34,7 +34,7 @@ import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
         @Type(value = StringSpec.class, name = "string")
 }
 )
-public abstract class Spec {
+public abstract class Spec{
     protected int count;
     protected int cardinality;
     protected String type;
@@ -44,10 +44,10 @@ public abstract class Spec {
             int count,
             int cardinality,
             String name
-    ) {
+    ){
         this.count = count;
         this.cardinality = cardinality;
-        if (name != null) {
+        if(name != null){
             this.name = name;
         }
     }
