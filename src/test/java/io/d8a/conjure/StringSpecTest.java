@@ -18,16 +18,26 @@
  */
 package io.d8a.conjure;
 
-import com.google.common.collect.ImmutableList;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import java.util.List;
-
-public class ValidTypes
+public class StringSpecTest
 {
-  private static final ImmutableList<String> validTypes = ImmutableList.of("double", "string", "int", "long");
-
-  public static List<String> getValidTypes()
+  @Test
+  public void testAddNodes() throws Exception
   {
-    return validTypes;
+    CardinalityNodeList nodeList = new CardinalityNodeList();
+    int numColumns=3;
+    int cardinality=10;
+    String name = "intcolumn";
+    StringSpec spec = new StringSpec(numColumns,cardinality,name);
+    spec.addNodes(nodeList);
+
+    CardinalityNodeList expectedList = new CardinalityNodeList();
+    for (int i=0;i<numColumns;i++){
+      expectedList.addNode(new StringCardinalityNode(name,cardinality));
+    }
+    Assert.assertEquals(nodeList, expectedList);
   }
+
 }

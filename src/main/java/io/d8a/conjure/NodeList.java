@@ -1,14 +1,11 @@
 package io.d8a.conjure;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public abstract class NodeList implements ConjureTemplateNode
 {

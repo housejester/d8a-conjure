@@ -18,7 +18,7 @@
  */
 package io.d8a.conjure;
 
-public class Counter
+public abstract class Counter<T>
 {
   private final int cardinality;
   private int counter;
@@ -28,13 +28,15 @@ public class Counter
     this.cardinality = cardinality;
   }
 
-  public int nextValue()
+  public T nextValue()
   {
     counter++;
     if (counter >= cardinality) {
       counter = 0;
     }
-    return counter;
+    return convertValue(counter);
   }
+
+  protected abstract T convertValue(int counter);
 
 }

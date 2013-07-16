@@ -12,13 +12,13 @@ import java.util.Map;
 
 public class ConjureTemplate
 {
-  private Map<String, ConjureTemplateNode> nodes;
-  private CardinalityNodeList variableList;
-  private Map<String, Method> typeRegistry;
-  private Clock clock;
+  private final Map<String, ConjureTemplateNode> nodes;
+  private CardinalityNodeList nodeList;
+  private final Map<String, Method> typeRegistry;
+  private final Clock clock;
   private String refOpenToken = "${";
   private String refCloseToken = "}";
-  private Map<String, String> namedNodeValueCache;
+  private final Map<String, String> namedNodeValueCache;
 
   private static final ObjectMapper json = new ObjectMapper();
 
@@ -39,12 +39,12 @@ public class ConjureTemplate
   public ConjureTemplate(Clock clock, String openToken, String closeToken)
   {
     this.clock = clock;
-    nodes = new HashMap<String, ConjureTemplateNode>();
-    typeRegistry = new HashMap<String, Method>();
+    this.nodes = new HashMap<String, ConjureTemplateNode>();
+    this.typeRegistry = new HashMap<String, Method>();
     this.refOpenToken = openToken;
     this.refCloseToken = closeToken;
     this.namedNodeValueCache = new HashMap<String, String>();
-    this.variableList = new CardinalityNodeList();
+    this.nodeList = new CardinalityNodeList();
   }
 
   public Clock getClock()
@@ -85,9 +85,9 @@ public class ConjureTemplate
     return conjure("sample");
   }
 
-  public Map<String,Object> conjureMapData()
+  public Map<String, Object> conjureMapData()
   {
-    return variableList.generateMap();
+    return nodeList.generateMap();
   }
 
   public ConjureTemplateNode getNode(String name)
@@ -121,9 +121,9 @@ public class ConjureTemplate
     typeRegistry.put(typeName, creator);
   }
 
-  public void setVariableList(CardinalityNodeList list)
+  public void setNodeList(CardinalityNodeList list)
   {
-    this.variableList = list;
+    this.nodeList = list;
   }
 
   private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException

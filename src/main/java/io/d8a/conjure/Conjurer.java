@@ -35,7 +35,7 @@ public class Conjurer implements Runnable
   private String filePath;
   private long count = 0;
   private ConjureTemplate template;
-  private boolean customCardinalityVariablesMode = false;
+  private boolean customCardinalityVariablesMode = true;
   private final Thread thread = new Thread(this);
 
 
@@ -51,7 +51,7 @@ public class Conjurer implements Runnable
 
   public Conjurer(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath)
   {
-    this(startTime, stopTime, printer, linesPerSec, maxLines, filePath, false);
+    this(startTime, stopTime, printer, linesPerSec, maxLines, filePath, true);
   }
 
 
@@ -226,11 +226,9 @@ public class Conjurer implements Runnable
         return;
       }
       Object event;
-      if (customCardinalityVariablesMode)
-      {
+      if (customCardinalityVariablesMode) {
         event = template.conjureMapData();
-      }
-      else {
+      } else {
         if (linesIterator == null || !linesIterator.hasNext()) {
           linesIterator = conjureNextBatch();
         }

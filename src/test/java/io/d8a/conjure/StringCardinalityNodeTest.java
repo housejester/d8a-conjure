@@ -25,9 +25,9 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-public class StringNodeTest
+public class StringCardinalityNodeTest
 {
-  StringNode node;
+  StringCardinalityNode node;
   int cardinality;
   String name;
 
@@ -35,18 +35,13 @@ public class StringNodeTest
   public void setUp(){
       cardinality=100;
       name="test";
-      node = new StringNode(name, cardinality);
+      node = new StringCardinalityNode(name, cardinality);
   }
 
   @Test
   public void testGetCardinality() throws Exception
   {
     Assert.assertEquals(100,node.getCardinality());
-  }
-
-  public void testGetType() throws Exception
-  {
-    Assert.assertEquals("string",node.getType());
   }
 
   public void testSetName() throws Exception

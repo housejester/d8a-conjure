@@ -26,12 +26,12 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
-public class MetricNodeTest
+public class CardinalityNodeTest
 {
   ObjectMapper mapper = new ObjectMapper();
-  DoubleMetricNode doubleNode = new DoubleMetricNode("test1",100);
-  LongMetricNode longNode = new LongMetricNode("test2",100);
-  IntMetricNode intNode = new IntMetricNode("test3",100);
+  DoubleCardinalityNode doubleNode = new DoubleCardinalityNode("test1",100);
+  LongCardinalityNode longNode = new LongCardinalityNode("test2",100);
+  IntCardinalityNode intNode = new IntCardinalityNode("test3",100);
 
   @BeforeClass
   public void setUp(){

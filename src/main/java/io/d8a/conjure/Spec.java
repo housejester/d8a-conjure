@@ -18,40 +18,41 @@
  */
 package io.d8a.conjure;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
-public class Spec
+@JsonTypeInfo(
+    use=JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property="type")
+@JsonSubTypes({
+                  @Type(value=LongSpec.class, name = "long"),
+                  @Type(value=IntSpec.class, name = "int"),
+                  @Type(value=DoubleSpec.class, name = "double"),
+                  @Type(value=StringSpec.class, name = "string")
+              }
+)
+public abstract class Spec
 {
-  private int count;
-  private int cardinality;
-  private String type;
-  private String name = "column";
+  protected int count;
+  protected int cardinality;
+  protected String type;
+  protected String name = "column";
 
-  @JsonCreator
-  public Spec(@JsonProperty("count") int count,
-              @JsonProperty("cardinality") int cardinality,
-              @JsonProperty("type") String type,
-              @JsonProperty("name") String name)
+  public Spec(
+      int count,
+      int cardinality,
+      String name
+  )
   {
     this.count = count;
     this.cardinality = cardinality;
-    if (type==null){
-      throw new IllegalArgumentException("Type is missing");
-    }
-    this.type = type;
-    if (name!=null){
+    if (name != null) {
       this.name = name;
     }
   }
 
-  public List<NodeBuilder> addRequirements(ArrayList<NodeBuilder> builderList) throws IllegalArgumentException{
-    for (int i =0;i<count;i++){
-      builderList.add(new NodeBuilder(type,cardinality,name));
-    }
-    return builderList;
-  }
+  public abstract CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException;
 }

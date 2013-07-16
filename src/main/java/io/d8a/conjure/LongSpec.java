@@ -18,16 +18,27 @@
  */
 package io.d8a.conjure;
 
-import com.google.common.collect.ImmutableList;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
-public class ValidTypes
+public class LongSpec extends Spec
 {
-  private static final ImmutableList<String> validTypes = ImmutableList.of("double", "string", "int", "long");
-
-  public static List<String> getValidTypes()
+  @JsonCreator
+  public LongSpec(
+      @JsonProperty("count") int count,
+      @JsonProperty("cardinality") int cardinality,
+      @JsonProperty("name") String name
+  )
   {
-    return validTypes;
+    super(count, cardinality, name);
+  }
+
+  @Override
+  public CardinalityNodeList addNodes(CardinalityNodeList list) throws IllegalArgumentException
+  {
+    for (int i = 0; i < count; i++) {
+      list.addNode(new LongCardinalityNode(name+i, cardinality));
+    }
+    return list;
   }
 }

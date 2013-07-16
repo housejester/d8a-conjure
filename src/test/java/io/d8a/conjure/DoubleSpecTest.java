@@ -18,32 +18,26 @@
  */
 package io.d8a.conjure;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-@JsonTypeName("schema")
-public class JsonSchema
+public class DoubleSpecTest
 {
-  private final ColumnSpec columnSpec;
-  private final DefaultSpec defaults;
-
-  @JsonCreator
-  public JsonSchema(@JsonProperty("columns") ColumnSpec columnSpec,
-                    @JsonProperty("defaults") DefaultSpec defaults)
+  @Test
+  public void testAddNodes() throws Exception
   {
-    this.columnSpec = columnSpec;
-    this.defaults = defaults;
-  }
+    CardinalityNodeList nodeList = new CardinalityNodeList();
+    int numColumns=3;
+    int cardinality=10;
+    String name = "doublecolumn";
+    DoubleSpec spec = new DoubleSpec(numColumns,cardinality,name);
+    spec.addNodes(nodeList);
 
-  public ColumnSpec getColumnSpec()
-  {
-    return columnSpec;
-  }
-
-  public DefaultSpec getDefaults()
-  {
-    return defaults;
+    CardinalityNodeList expectedList = new CardinalityNodeList();
+    for (int i=0;i<numColumns;i++){
+      expectedList.addNode(new DoubleCardinalityNode(name,cardinality));
+    }
+    Assert.assertEquals(nodeList, expectedList);
   }
 
 }

@@ -40,7 +40,7 @@ public class ConjureTemplateParser
     ObjectMapper mapper = new ObjectMapper();
     File file = new File(filePath);
     CardinalityNodeListBuilder dc = mapper.readValue(file, CardinalityNodeListBuilder.class);
-    template.setVariableList(dc.build());
+    template.setNodeList(dc.build());
     return template;
   }
 

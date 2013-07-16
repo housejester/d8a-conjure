@@ -9,24 +9,35 @@ import java.util.Map;
 
 public class CardinalityNodeList implements ConjureTemplateNode
 {
-  protected List<VariableWithCardinality> cardinalityNodes = Lists.newArrayList();
+  protected List<CardinalityNode> cardinalityNodes = Lists.newArrayList();
   private Map<String, Object> jsonMap = Maps.newHashMap();
-  public CardinalityNodeList(List<VariableWithCardinality> nodes)
+
+  public CardinalityNodeList()
   {
-    for (VariableWithCardinality node : nodes) {
+  }
+
+  public CardinalityNodeList(List<CardinalityNode> nodes)
+  {
+    for (CardinalityNode node : nodes) {
       cardinalityNodes.add(node);
     }
   }
 
-  public CardinalityNodeList()
-{
-}
 
-  public void addNode(VariableWithCardinality node){
+  public void addNode(CardinalityNode node)
+  {
     cardinalityNodes.add(node);
   }
 
-  public List<VariableWithCardinality> getNodes(){
+  public void addAll(List<CardinalityNode> nodes)
+  {
+    for (CardinalityNode node : nodes) {
+      addNode(node);
+    }
+  }
+
+  public List<CardinalityNode> getNodes()
+  {
     return Collections.unmodifiableList(cardinalityNodes);
   }
 
@@ -36,15 +47,22 @@ public class CardinalityNodeList implements ConjureTemplateNode
     return buff.append(generateMap().toString());
   }
 
-  public Map<String,Object> generateMap(){
-    for (VariableWithCardinality variable : cardinalityNodes) {
+  public Map<String, Object> generateMap()
+  {
+    for (CardinalityNode variable : cardinalityNodes) {
       jsonMap.put(variable.getName(), variable.getValue());
     }
-    jsonMap.put("time", System.currentTimeMillis());
+    jsonMap.put("timestamp", System.currentTimeMillis());
     return jsonMap;
   }
 
-  public int getSize(){
+  public int size()
+  {
     return cardinalityNodes.size();
+  }
+
+  @Override
+  public boolean equals(Object list){
+    return getNodes().equals(((CardinalityNodeList) list).getNodes());
   }
 }

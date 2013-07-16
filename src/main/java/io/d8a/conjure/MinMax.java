@@ -14,8 +14,9 @@ public class MinMax implements Jitter
     count = (max - min) + 1;
   }
 
-  public long nextValue(){
-    return base + (long)(RAND.nextDouble() * count);
+  public long nextValue()
+  {
+    return base + (long) (RAND.nextDouble() * count);
   }
 
 }

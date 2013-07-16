@@ -18,21 +18,27 @@
  */
 package io.d8a.conjure;
 
-import org.testng.annotations.Test;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NodeBuilderTest
+public class DoubleSpec extends Spec
 {
-  @Test(expectedExceptions = IllegalArgumentException.class)
-  public void testBuildInvalidType() throws Exception
+  @JsonCreator
+  public DoubleSpec(
+      @JsonProperty("count") int count,
+      @JsonProperty("cardinality") int cardinality,
+      @JsonProperty("name") String name
+  )
   {
-    NodeBuilder builder = new NodeBuilder("invalid_type",5,"column");
-    builder.build();
+    super(count, cardinality, name);
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class)
-  public void testBuildInvalidCardinality() throws Exception
+  @Override
+  public CardinalityNodeList addNodes(CardinalityNodeList list) throws IllegalArgumentException
   {
-    NodeBuilder builder = new NodeBuilder("string",-5,"column");
-    builder.build();
+    for (int i =0; i<count; i++){
+      list.addNode(new DoubleCardinalityNode(name+i,cardinality));
+    }
+    return list;
   }
 }

@@ -24,7 +24,7 @@ class KafkaPrinter implements Printer
   @Override
   public void print(Object message)
   {
-    ProducerData<String, String> data = new ProducerData<String, String>(topic,(String) message);
+    ProducerData<String, String> data = new ProducerData<String, String>(topic, (String) message);
     producer.send(data);
   }
 
