@@ -17,7 +17,7 @@ public class ConjurerBuilder {
             Integer linesPerSec,
             Long maxLines,
             String filePath,
-            Boolean customCardinalityVariablesMode
+            boolean customCardinalityVariablesMode
     ){
 
         if(startTime != null){

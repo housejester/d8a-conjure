@@ -24,7 +24,7 @@ public class Conjurer implements Runnable {
     private String filePath;
     private long count = 0;
     private ConjureTemplate template;
-    private boolean customCardinalityVariablesMode = true;
+    private boolean customSchema = true;
     private final Thread thread = new Thread(this);
 
 
@@ -48,9 +48,9 @@ public class Conjurer implements Runnable {
             int linesPerSec,
             long maxLines,
             String filePath,
-            Boolean customCardinalityMode
+            boolean customCardinalityMode
     ) {
-        this.customCardinalityVariablesMode = customCardinalityMode;
+        this.customSchema = customCardinalityMode;
         this.stopTime = stopTime;
         this.printer = printer;
         this.linesPerSec = linesPerSec;
@@ -203,7 +203,7 @@ public class Conjurer implements Runnable {
                 return;
             }
             Object event;
-            if(customCardinalityVariablesMode){
+            if(customSchema){
                 event = template.conjureMapData();
             } else{
                 if(linesIterator == null || ! linesIterator.hasNext()){
@@ -245,18 +245,7 @@ public class Conjurer implements Runnable {
         long now = clock.currentTimeMillis();
         long duration = now - start;
         long ratePerSec = (long) (1000 * ((double) linesPrinted) / duration);
-        System.err
-                .println(
-                        "generated "
-                                + linesPrinted
-                                + " lines in "
-                                + duration
-                                + "ms (using the "
-                                + clock
-                                + "), "
-                                + ratePerSec
-                                + "/s.  "
-                );
+        System.err.println("generated "+linesPrinted+ " lines in "+ duration+ "ms (using the "+ clock+ "), "+ ratePerSec+ "/s.");
     }
 
     private void report(long start, long linesPrinted, String lastLinePrinted, long bytesPrinted) {

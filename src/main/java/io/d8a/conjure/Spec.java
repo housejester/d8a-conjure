@@ -34,5 +34,15 @@ public abstract class Spec {
         }
     }
 
-    public abstract CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException;
+    public CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException
+    {
+      for(int i = 0; i<count; i++){
+        nodeList.add(createNewNode(name + i, cardinality));
+      }
+      return nodeList;
+
+    }
+
+    public abstract CardinalityNode createNewNode(String name, int cardinality);
 }
+

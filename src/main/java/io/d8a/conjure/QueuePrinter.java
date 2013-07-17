@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class QueuePrinter implements Printer {
     private final BlockingQueue<Object> queue;
-    long waitTime;
-    TimeUnit unit;
+    private final long waitTime;
+    private final TimeUnit unit;
 
     public QueuePrinter(BlockingQueue<Object> queue, long waitTime, TimeUnit unit){
         this.waitTime = waitTime;

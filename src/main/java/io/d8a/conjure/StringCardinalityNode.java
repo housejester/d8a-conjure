@@ -6,7 +6,7 @@ public class StringCardinalityNode extends CardinalityNode<String> {
         super(name, cardinality, new Counter<String>(cardinality) {
             @Override
             protected String convertValue(int counter){
-                return "value"+Integer.toString(counter);
+                return String.format("value%s",Integer.toString(counter));
             }
         });
     }

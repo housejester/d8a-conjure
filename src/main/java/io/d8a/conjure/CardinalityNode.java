@@ -4,7 +4,7 @@ package io.d8a.conjure;
 import com.google.common.base.Preconditions;
 
 public abstract class CardinalityNode<T> implements ConjureTemplateNode {
-    public final Counter<T> counter;
+    private final Counter<T> counter;
     private final String name;
     private final int cardinality;
 

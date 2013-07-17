@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CardinalityNodeList implements ConjureTemplateNode {
     protected List<CardinalityNode> cardinalityNodes = Lists.newArrayList();
-    private Map<String, Object> jsonMap = Maps.newHashMap();
+    private Map<String, Object> event = Maps.newHashMap();
 
     public CardinalityNodeList(){
     }
@@ -23,10 +23,6 @@ public class CardinalityNodeList implements ConjureTemplateNode {
         cardinalityNodes.add(node);
     }
 
-    public void addAll(List<CardinalityNode> nodes){
-        nodes.addAll(nodes);
-    }
-
     public List<CardinalityNode> getNodes(){
         return Collections.unmodifiableList(cardinalityNodes);
     }
@@ -38,10 +34,10 @@ public class CardinalityNodeList implements ConjureTemplateNode {
 
     public Map<String, Object> generateMap(){
         for(CardinalityNode variable : cardinalityNodes){
-            jsonMap.put(variable.getName(), variable.getValue());
+            event.put(variable.getName(), variable.getValue());
         }
-        jsonMap.put("timestamp", System.currentTimeMillis());
-        return jsonMap;
+        event.put("timestamp", Clock.SYSTEM_CLOCK.currentTimeMillis());
+        return event;
     }
 
     public int size(){

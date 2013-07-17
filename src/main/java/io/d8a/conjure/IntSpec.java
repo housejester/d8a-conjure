@@ -13,11 +13,10 @@ public class IntSpec extends Spec {
         super(count, cardinality, name);
     }
 
-    @Override
-    public CardinalityNodeList addNodes(CardinalityNodeList list) throws IllegalArgumentException{
-        for(int i = 0; i<count; i++){
-            list.add(new IntCardinalityNode(name + i, cardinality));
-        }
-        return list;
-    }
+  @Override
+  public CardinalityNode createNewNode(String name, int cardinality)
+  {
+    return new IntCardinalityNode(name,cardinality);
+  }
+
 }
