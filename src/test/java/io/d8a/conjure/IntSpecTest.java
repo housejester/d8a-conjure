@@ -17,7 +17,7 @@ public class IntSpecTest
 
     CardinalityNodeList expectedList = new CardinalityNodeList();
     for (int i=0;i<numColumns;i++){
-      expectedList.addNode(new IntCardinalityNode(name+i,cardinality));
+      expectedList.add(new IntCardinalityNode(name + i, cardinality));
     }
     Assert.assertEquals(nodeList,expectedList);
   }

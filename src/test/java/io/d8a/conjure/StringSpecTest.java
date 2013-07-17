@@ -15,7 +15,7 @@ public class StringSpecTest {
 
         CardinalityNodeList expectedList = new CardinalityNodeList();
         for(int i = 0; i < numColumns; i++){
-            expectedList.addNode(new StringCardinalityNode(name+i, cardinality));
+            expectedList.add(new StringCardinalityNode(name + i, cardinality));
         }
         Assert.assertEquals(nodeList, expectedList);
     }

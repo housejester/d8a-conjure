@@ -15,20 +15,16 @@ public class CardinalityNodeList implements ConjureTemplateNode {
     }
 
     public CardinalityNodeList(List<CardinalityNode> nodes){
-        for(CardinalityNode node : nodes){
-            cardinalityNodes.add(node);
-        }
+      cardinalityNodes.addAll(nodes);
     }
 
 
-    public void addNode(CardinalityNode node){
+    public void add(CardinalityNode node){
         cardinalityNodes.add(node);
     }
 
     public void addAll(List<CardinalityNode> nodes){
-        for(CardinalityNode node : nodes){
-            addNode(node);
-        }
+        nodes.addAll(nodes);
     }
 
     public List<CardinalityNode> getNodes(){
@@ -52,7 +48,14 @@ public class CardinalityNodeList implements ConjureTemplateNode {
         return cardinalityNodes.size();
     }
 
-    @Override
+  @Override
+  public int hashCode()
+  {
+    int result = cardinalityNodes.hashCode();
+    return result;
+  }
+
+  @Override
     public boolean equals(Object list){
         return getNodes().equals(((CardinalityNodeList) list).getNodes());
     }

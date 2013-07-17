@@ -4,9 +4,9 @@ package io.d8a.conjure;
 import com.google.common.base.Preconditions;
 
 public abstract class CardinalityNode<T> implements ConjureTemplateNode {
-    public Counter<T> counter;
-    private String name;
-    private int cardinality;
+    public final Counter<T> counter;
+    private final String name;
+    private final int cardinality;
 
     public CardinalityNode(String name, int cardinality, Counter<T> counter){
         Preconditions.checkArgument(cardinality>0, "must be positive: %s", cardinality);
@@ -18,10 +18,6 @@ public abstract class CardinalityNode<T> implements ConjureTemplateNode {
 
     public int getCardinality(){
         return cardinality;
-    }
-
-    public void setName(String name){
-        this.name = name;
     }
 
     public T getValue(){
@@ -38,7 +34,16 @@ public abstract class CardinalityNode<T> implements ConjureTemplateNode {
         return buff.append(getValue());
     }
 
-    @Override
+  @Override
+  public int hashCode()
+  {
+    int result = counter != null ? counter.hashCode() : 0;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + cardinality;
+    return result;
+  }
+
+  @Override
     public boolean equals(Object other){
         CardinalityNode otherObj = (CardinalityNode) other;
         if(getName().equals(otherObj.getName()) && getCardinality() == (otherObj.getCardinality()) && getValue().equals(otherObj.getValue())){

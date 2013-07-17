@@ -17,7 +17,7 @@ public class LongSpecTest
 
     CardinalityNodeList expectedList = new CardinalityNodeList();
     for (int i=0;i<numColumns;i++){
-      expectedList.addNode(new LongCardinalityNode(name+i,cardinality));
+      expectedList.add(new LongCardinalityNode(name + i, cardinality));
     }
     Assert.assertEquals(nodeList, expectedList);
   }

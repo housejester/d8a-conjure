@@ -17,7 +17,7 @@ public class DoubleSpecTest
 
     CardinalityNodeList expectedList = new CardinalityNodeList();
     for (int i=0;i<numColumns;i++){
-      expectedList.addNode(new DoubleCardinalityNode(name+i,cardinality));
+      expectedList.add(new DoubleCardinalityNode(name + i, cardinality));
     }
     Assert.assertEquals(nodeList, expectedList);
   }

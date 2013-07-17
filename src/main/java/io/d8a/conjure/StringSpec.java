@@ -16,7 +16,7 @@ public class StringSpec extends Spec {
     @Override
     public CardinalityNodeList addNodes(CardinalityNodeList list) throws IllegalArgumentException{
         for(int i = 0; i<count; i++){
-            list.addNode(new StringCardinalityNode(name+i, cardinality));
+            list.add(new StringCardinalityNode(name + i, cardinality));
         }
         return list;
     }

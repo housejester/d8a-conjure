@@ -21,7 +21,7 @@ public class CardinalityNodeListBuilderTest
     CardinalityNodeList expectedList = new CardinalityNodeList();
     for (int i=0;i<5;i++)
     {
-      expectedList.addNode(new IntCardinalityNode("intcolumn"+i,10));
+      expectedList.add(new IntCardinalityNode("intcolumn" + i, 10));
     }
     Assert.assertEquals(expectedList, list.build());
   }
@@ -33,11 +33,11 @@ public class CardinalityNodeListBuilderTest
     CardinalityNodeList expectedList = new CardinalityNodeList();
     for (int i=0;i<5;i++)
     {
-      expectedList.addNode(new IntCardinalityNode("intcolumn"+i,10));
+      expectedList.add(new IntCardinalityNode("intcolumn" + i, 10));
     }
     for (int i=0;i<3;i++)
     {
-      expectedList.addNode(new LongCardinalityNode("longcolumn"+i,100));
+      expectedList.add(new LongCardinalityNode("longcolumn" + i, 100));
     }
     Assert.assertEquals(list.build(),expectedList);
 
