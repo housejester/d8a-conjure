@@ -1,49 +1,47 @@
 package io.d8a.conjure;
 
+import com.google.common.base.Preconditions;
+
 public class ConjurerBuilder {
     private long startTime = - 1;
     private long stopTime = Long.MAX_VALUE;
     private Printer printer = Conjurer.nonePrinter();
     private int linesPerSec = 10;
     private long maxLines = Long.MAX_VALUE;
-    private final String filePath;
-    private boolean customCardinalityVariablesMode = false;
+    private String filePath=null;
+    private boolean customSchema = false;
 
-
-    public ConjurerBuilder(
-            Long startTime,
-            Long stopTime,
-            Printer printer,
-            Integer linesPerSec,
-            Long maxLines,
-            String filePath,
-            boolean customCardinalityVariablesMode
-    ){
-
-        if(startTime != null){
-            this.startTime = startTime;
-        }
-        if(stopTime != null){
-            this.stopTime = stopTime;
-        }
-        if(printer != null){
-            this.printer = printer;
-        }
-        if(linesPerSec != null){
-            this.linesPerSec = linesPerSec;
-        }
-        if(maxLines != null){
-            this.maxLines = maxLines;
-        }
-        this.filePath = filePath;
-        this.customCardinalityVariablesMode = customCardinalityVariablesMode;
+    public ConjurerBuilder withStartTime(long startTime){
+        this.startTime=startTime;
+      return this;
     }
 
-    public void setPrinter(Printer printer){
-        this.printer = printer;
+    public ConjurerBuilder withPrinter(Printer printer){
+      this.printer=printer;
+      return this;
     }
 
+    public ConjurerBuilder withLinesPerSec(int linesPerSec){
+      this.linesPerSec = linesPerSec;
+      return this;
+    }
+
+    public ConjurerBuilder withMaxLines(long maxLines){
+      this.maxLines=maxLines;
+      return this;
+    }
+
+    public ConjurerBuilder withFilePath(String filePath){
+      this.filePath=filePath;
+      return this;
+    }
+
+    public ConjurerBuilder withCustomSchema(boolean customSchema){
+      this.customSchema=customSchema;
+      return this;
+    }
     public Conjurer build(){
-        return new Conjurer(startTime, stopTime, printer, linesPerSec, maxLines, filePath, customCardinalityVariablesMode);
+      Preconditions.checkArgument(filePath!=null,"Must specify filepath");
+        return new Conjurer(startTime, stopTime, printer, linesPerSec, maxLines, filePath, customSchema);
     }
 }
