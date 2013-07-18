@@ -26,12 +26,6 @@ public class StringCardinalityNodeTest
     Assert.assertEquals(100,node.getCardinality());
   }
 
-  public void testSetName() throws Exception
-  {
-    node.setName("test1");
-    Assert.assertEquals("test1",node.getName());
-  }
-
   public void testGetValue() throws Exception
   {
     Map<String,Integer> cardinalityChecker = Maps.newHashMap();

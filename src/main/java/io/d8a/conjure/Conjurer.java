@@ -1,5 +1,6 @@
 package io.d8a.conjure;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 
@@ -70,6 +71,10 @@ public class Conjurer implements Runnable {
         } catch(IOException e) {
             throw new IllegalArgumentException("Could not create ConjureTemplate from " + filePath, e);
         }
+    }
+
+    public static Builder getBuilder(){
+      return new Builder();
     }
 
     public static void main(String[] args) throws IOException, ParseException {
@@ -301,4 +306,66 @@ public class Conjurer implements Runnable {
     public long getCount() {
         return count;
     }
+
+
+  public static class Builder
+  {
+    private long startTime = - 1;
+    private long stopTime = Long.MAX_VALUE;
+    private Printer printer = Conjurer.nonePrinter();
+    private int linesPerSec = 10;
+    private long maxLines = Long.MAX_VALUE;
+    private String filePath=null;
+    private boolean customSchema = false;
+
+    public Builder withStartTime(Long startTime){
+      if (startTime!=null){
+      this.startTime=startTime;
+      }
+      return this;
+    }
+
+    public Builder withPrinter(Printer printer){
+      this.printer=printer;
+      return this;
+    }
+
+    public Builder withStopTime(Long stopTime){
+      if (stopTime!=null){
+        this.stopTime=stopTime;
+      }
+      return this;
+    }
+
+    public Builder withLinesPerSec(Integer linesPerSec){
+      if (linesPerSec!=null){
+      this.linesPerSec = linesPerSec;
+      }
+      return this;
+    }
+
+    public Builder withMaxLines(Long maxLines){
+      if (maxLines!=null){
+        this.maxLines=maxLines;
+      }
+      return this;
+    }
+
+    public Builder withFilePath(String filePath){
+      this.filePath=filePath;
+      return this;
+    }
+
+    public Builder withCustomSchema(Boolean customSchema){
+      if (customSchema!=null){
+        this.customSchema=customSchema;
+      }
+      return this;
+    }
+    public Conjurer build(){
+      Preconditions.checkArgument(filePath != null, "Must specify filepath");
+      return new Conjurer(startTime, stopTime, printer, linesPerSec, maxLines, filePath, customSchema);
+    }
+  }
+
 }
