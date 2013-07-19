@@ -14,39 +14,65 @@ public class CardinalityNodeTest
   DoubleCardinalityNode doubleNode = new DoubleCardinalityNode("test1",100);
   LongCardinalityNode longNode = new LongCardinalityNode("test2",100);
   IntCardinalityNode intNode = new IntCardinalityNode("test3",100);
+  StringCardinalityNode stringNode = new StringCardinalityNode("test4",100);
 
   @BeforeClass
   public void setUp(){
 
   }
   @Test
-  public void testDoubleValue() throws Exception
+  public void testDoubleCardinality() throws Exception
   {
-    Map<Double,Integer> testMap = Maps.newHashMap();
-    for (int i=0;i<doubleNode.getCardinality()*10;i++){
-      testMap.put(doubleNode.getValue(),1);
+    Map<Double,Integer> valuesSeen = Maps.newHashMap();
+    for (int i=0;i<doubleNode.getCardinality();i++){
+      valuesSeen.put(doubleNode.getValue(),1);
     }
-    Assert.assertEquals(doubleNode.getCardinality(),testMap.keySet().size());
+    Assert.assertEquals(doubleNode.getCardinality(),valuesSeen.keySet().size());
   }
 
   @Test
-  public void testLongValue() throws Exception
+  public void testLongCardinality() throws Exception
   {
-    Map<Long,Integer> testMap = Maps.newHashMap();
-    for (int i=0;i<longNode.getCardinality()*10;i++){
-      testMap.put(longNode.getValue(),1);
+    Map<Long,Integer> valuesSeen = Maps.newHashMap();
+    for (int i=0;i<longNode.getCardinality();i++){
+      valuesSeen.put(longNode.getValue(),1);
     }
-    Assert.assertEquals(longNode.getCardinality(),testMap.keySet().size());
+    Assert.assertEquals(longNode.getCardinality(),valuesSeen.keySet().size());
   }
 
   @Test
-  public void testIntValue() throws Exception
+  public void testIntCardinality() throws Exception
   {
-    Map<Integer,Integer> testMap = Maps.newHashMap();
-    for (int i=0;i<intNode.getCardinality()*10;i++){
-      testMap.put(intNode.getValue(),1);
+    Map<Integer,Integer> valuesSeen = Maps.newHashMap();
+    for (int i=0;i<intNode.getCardinality();i++){
+      valuesSeen.put(intNode.getValue(),1);
     }
-    Assert.assertEquals(longNode.getCardinality(),testMap.keySet().size());
+    Assert.assertEquals(longNode.getCardinality(),valuesSeen.keySet().size());
+  }
+
+  @Test
+  public void testStringCardinality() throws Exception
+  {
+    Map<String,Integer> valuesSeen = Maps.newHashMap();
+    for (int i=0;i<stringNode.getCardinality();i++){
+      valuesSeen.put(stringNode.getValue(),1);
+    }
+    Assert.assertEquals(stringNode.getCardinality(),valuesSeen.keySet().size());
+  }
+
+  @Test (expectedExceptions = IllegalArgumentException.class)
+  public void checkNegativeCardinality() throws Exception
+  {
+    CardinalityNode<Integer> node = new CardinalityNode<Integer>("test5",-5, new Counter<Integer>(-5){
+
+      @Override
+      protected Integer convertValue(int counter)
+      {
+        return 4;
+      }
+    })
+    {
+    };
   }
 
 

@@ -2,6 +2,7 @@ package io.d8a.conjure;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.base.Preconditions;
 
 import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
@@ -27,6 +28,7 @@ public abstract class Spec {
             int cardinality,
             String name
     ){
+        Preconditions.checkArgument(count>=0,"count must be non negative");
         this.count = count;
         this.cardinality = cardinality;
         if(name != null){

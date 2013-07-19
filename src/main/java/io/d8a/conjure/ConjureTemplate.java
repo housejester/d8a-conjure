@@ -72,7 +72,7 @@ public class ConjureTemplate {
     }
 
     public Map<String, Object> conjureMapData() {
-        return nodeList.generateMap();
+        return nodeList.generateEvent();
     }
 
     public ConjureTemplateNode getNode(String name) {

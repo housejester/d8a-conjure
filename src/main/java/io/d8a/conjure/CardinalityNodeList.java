@@ -29,10 +29,10 @@ public class CardinalityNodeList implements ConjureTemplateNode {
 
     @Override
     public StringBuilder generate(StringBuilder buff){
-        return buff.append(generateMap().toString());
+        return buff.append(generateEvent().toString());
     }
 
-    public Map<String, Object> generateMap(){
+    public Map<String, Object> generateEvent(){
         for(CardinalityNode variable : cardinalityNodes){
             event.put(variable.getName(), variable.getValue());
         }
