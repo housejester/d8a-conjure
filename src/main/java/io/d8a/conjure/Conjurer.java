@@ -280,17 +280,7 @@ public class Conjurer implements Runnable
     long duration = now - start;
     long ratePerSec = (long) (1000 * ((double) linesPrinted) / duration);
     System.err
-          .println(
-              "generated "
-              + linesPrinted
-              + " lines in "
-              + duration
-              + "ms (using the "
-              + clock
-              + "), "
-              + ratePerSec
-              + "/s."
-          );
+          .println("generated "+linesPrinted+ " lines in "+ duration+ "ms (using the "+ clock+ "), "+ ratePerSec+ "/s.");
   }
 
   private void report(long start, long linesPrinted, String lastLinePrinted, long bytesPrinted)
