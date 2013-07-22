@@ -1,5 +1,6 @@
 package io.d8a.conjure;
 
-interface Printer {
-    void print(Object message);
+interface Printer
+{
+  void print(Object message);
 }

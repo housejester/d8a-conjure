@@ -3,36 +3,42 @@ package io.d8a.conjure;
 
 import com.google.common.base.Preconditions;
 
-public abstract class CardinalityNode<T> implements ConjureTemplateNode {
-    private final Counter<T> counter;
-    private final String name;
-    private final int cardinality;
+public abstract class CardinalityNode<T> implements ConjureTemplateNode
+{
+  private final Counter<T> counter;
+  private final String name;
+  private final int cardinality;
 
-    public CardinalityNode(String name, int cardinality, Counter<T> counter){
-        Preconditions.checkArgument(cardinality>0, "must be positive: %s", cardinality);
+  public CardinalityNode(String name, int cardinality, Counter<T> counter)
+  {
+    Preconditions.checkArgument(cardinality > 0, "must be positive: %s", cardinality);
 
-        this.name = name;
-        this.cardinality = cardinality;
-        this.counter = counter;
-    }
+    this.name = name;
+    this.cardinality = cardinality;
+    this.counter = counter;
+  }
 
-    public int getCardinality(){
-        return cardinality;
-    }
+  public int getCardinality()
+  {
+    return cardinality;
+  }
 
-    public T getValue(){
-        return counter.nextValue();
-    }
+  public T getValue()
+  {
+    return counter.nextValue();
+  }
 
-    public String getName(){
-        return name;
-    }
+  public String getName()
+  {
+    return name;
+  }
 
 
-    @Override
-    public StringBuilder generate(StringBuilder buff){
-        return buff.append(getValue());
-    }
+  @Override
+  public StringBuilder generate(StringBuilder buff)
+  {
+    return buff.append(getValue());
+  }
 
   @Override
   public int hashCode()
@@ -44,12 +50,15 @@ public abstract class CardinalityNode<T> implements ConjureTemplateNode {
   }
 
   @Override
-    public boolean equals(Object other){
-        CardinalityNode otherObj = (CardinalityNode) other;
-        if(getName().equals(otherObj.getName()) && getCardinality() == (otherObj.getCardinality()) && getValue().equals(otherObj.getValue())){
-            return true;
-        }
-        return false;
+  public boolean equals(Object other)
+  {
+    CardinalityNode otherObj = (CardinalityNode) other;
+    if (getName().equals(otherObj.getName()) && getCardinality() == (otherObj.getCardinality()) && getValue().equals(
+        otherObj.getValue()
+    )) {
+      return true;
     }
+    return false;
+  }
 
 }
