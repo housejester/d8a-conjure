@@ -1,0 +1,16 @@
+{
+	"specs":
+	[
+		{
+			"cardinality":10,
+			"type":"int",
+			"count":5
+		},
+		{
+			"cardinality":100,
+			"type":"string",
+			"count":3,
+			"name":"HundredCardinalityColumns"
+		}	
+	]	
+}
