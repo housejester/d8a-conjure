@@ -12,12 +12,13 @@ public class SpecTest
   DoubleSpec doubleSpec = new DoubleSpec(numColumns,cardinality,name);
   StringSpec stringSPec = new StringSpec(numColumns,cardinality,name);
   LongSpec longSpec = new LongSpec(numColumns,cardinality,name);
+  private final Clock clock= Clock.SYSTEM_CLOCK;
 
   @Test
   public void intSpecTest(){
-    CardinalityNodeList nodeList = new CardinalityNodeList();
+    CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     intSpec.addNodes(nodeList);
-    CardinalityNodeList expectedList = new CardinalityNodeList();
+    CardinalityNodeList expectedList = new CardinalityNodeList(clock);
     for (int i=0;i<numColumns;i++){
       expectedList.add(new IntCardinalityNode(name + i, cardinality));
     }
@@ -25,9 +26,9 @@ public class SpecTest
   }
   @Test
   public void doubleSpecTest(){
-    CardinalityNodeList nodeList = new CardinalityNodeList();
+    CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     doubleSpec.addNodes(nodeList);
-    CardinalityNodeList expectedList = new CardinalityNodeList();
+    CardinalityNodeList expectedList = new CardinalityNodeList(clock);
     for (int i=0;i<numColumns;i++){
       expectedList.add(new DoubleCardinalityNode(name + i, cardinality));
     }
@@ -35,9 +36,9 @@ public class SpecTest
   }
   @Test
   public void LongSpecTest(){
-    CardinalityNodeList nodeList = new CardinalityNodeList();
+    CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     longSpec.addNodes(nodeList);
-    CardinalityNodeList expectedList = new CardinalityNodeList();
+    CardinalityNodeList expectedList = new CardinalityNodeList(clock);
     for (int i=0;i<numColumns;i++){
       expectedList.add(new LongCardinalityNode(name + i, cardinality));
     }
@@ -45,9 +46,9 @@ public class SpecTest
   }
   @Test
   public void stringSpecTest(){
-    CardinalityNodeList nodeList = new CardinalityNodeList();
+    CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     stringSPec.addNodes(nodeList);
-    CardinalityNodeList expectedList = new CardinalityNodeList();
+    CardinalityNodeList expectedList = new CardinalityNodeList(clock);
     for (int i=0;i<numColumns;i++){
       expectedList.add(new StringCardinalityNode(name + i, cardinality));
     }

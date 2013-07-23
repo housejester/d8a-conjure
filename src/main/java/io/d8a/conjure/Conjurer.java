@@ -205,14 +205,19 @@ public class Conjurer implements Runnable
 
   public void exhaust()
   {
-    thread.setDaemon(true);
-    thread.start();
+    start();
     try {
       thread.join();
     }
     catch (InterruptedException e) {
       thread.interrupt();
     }
+  }
+
+  public void start()
+  {
+    thread.setDaemon(true);
+    thread.start();
   }
 
   public void run()
@@ -329,12 +334,12 @@ public class Conjurer implements Runnable
     return new KafkaPrinter(zkString, topic);
   }
 
-  public static Printer queuePrinter(BlockingQueue<Object> queue)
+  public static Printer queuePrinter(BlockingQueue queue)
   {
     return new QueuePrinter(queue, waitTime, unit);
   }
 
-  public static Printer consolePrinter()
+  public static Printer<String> consolePrinter()
   {
     return new ConsolePrinter();
   }

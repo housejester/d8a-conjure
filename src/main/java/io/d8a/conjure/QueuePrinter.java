@@ -6,13 +6,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 //Queue printer is used to print event objects from conjure directly to a queue. Prevents need for serializing and deserealizing.
-public class QueuePrinter implements Printer
+public class QueuePrinter<T> implements Printer<T>
 {
-  private final BlockingQueue<Object> queue;
+  private final BlockingQueue<T> queue;
   private final long waitTime;
   private final TimeUnit unit;
 
-  public QueuePrinter(BlockingQueue<Object> queue, long waitTime, TimeUnit unit)
+  public QueuePrinter(BlockingQueue queue, long waitTime, TimeUnit unit)
   {
     this.waitTime = waitTime;
     this.unit = unit;
@@ -20,10 +20,10 @@ public class QueuePrinter implements Printer
   }
 
   @Override
-  public void print(Object obj)
+  public void print(T message)
   {
     try {
-      queue.offer(obj, waitTime, unit);
+      queue.offer(message, waitTime, unit);
     }
     catch (InterruptedException e) {
       throw Throwables.propagate(e);

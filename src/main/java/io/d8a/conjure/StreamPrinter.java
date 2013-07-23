@@ -5,7 +5,7 @@ import java.io.PrintStream;
 /**
  * Created: 4/19/13 10:15 AM
  */
-public class StreamPrinter implements Printer
+public class StreamPrinter implements Printer<String>
 {
   private PrintStream out;
 
@@ -15,7 +15,7 @@ public class StreamPrinter implements Printer
   }
 
   @Override
-  public void print(Object message)
+  public void print(String message)
   {
     out.println(message);
     out.checkError();

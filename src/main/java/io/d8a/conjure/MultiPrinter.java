@@ -3,7 +3,7 @@ package io.d8a.conjure;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class MultiPrinter implements Printer
+public class MultiPrinter implements Printer<String>
 {
   private Collection<Printer> printers;
 
@@ -18,7 +18,7 @@ public class MultiPrinter implements Printer
   }
 
   @Override
-  public void print(Object message)
+  public void print(String message)
   {
     for (Printer printer : printers) {
       printer.print(message);
