@@ -220,6 +220,10 @@ public class Conjurer implements Runnable
     thread.start();
   }
 
+  public void stop(){
+    thread.interrupt();
+  }
+
   public void run()
   {
     System.err.println("Conjuring data to " + printer + " at a rate of " + linesPerSec + " lines per second.");
