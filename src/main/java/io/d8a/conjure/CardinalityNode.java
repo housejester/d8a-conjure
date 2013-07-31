@@ -3,12 +3,12 @@ package io.d8a.conjure;
 
 import com.google.common.base.Preconditions;
 
-public abstract class CardinalityNode<T> implements ConjureTemplateNode {
+public abstract class CardinalityNode<T> implements ConjureTemplateNode{
     private final Counter<T> counter;
     private final String name;
     private final int cardinality;
 
-    public CardinalityNode(String name, int cardinality, Counter<T> counter) {
+    public CardinalityNode(String name, int cardinality, Counter<T> counter){
         Preconditions.checkArgument(cardinality > 0, "must be positive: %s", cardinality);
 
         this.name = name;
@@ -16,38 +16,38 @@ public abstract class CardinalityNode<T> implements ConjureTemplateNode {
         this.counter = counter;
     }
 
-    public int getCardinality() {
+    public int getCardinality(){
         return cardinality;
     }
 
-    public T getValue() {
+    public T getValue(){
         return counter.nextValue();
     }
 
-    public String getName() {
+    public String getName(){
         return name;
     }
 
 
     @Override
-    public StringBuilder generate(StringBuilder buff) {
+    public StringBuilder generate(StringBuilder buff){
         return buff.append(getValue());
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int result = counter != null ? counter.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + cardinality;
+        result = 31 * result+(name != null ? name.hashCode() : 0);
+        result = 31 * result+cardinality;
         return result;
     }
 
     @Override
-    public boolean equals(Object other) {
-        CardinalityNode otherObj = (CardinalityNode) other;
-        if (getName().equals(otherObj.getName()) && getCardinality() == (otherObj.getCardinality()) && getValue().equals(
+    public boolean equals(Object other){
+        CardinalityNode otherObj = (CardinalityNode)other;
+        if(getName().equals(otherObj.getName()) && getCardinality() == (otherObj.getCardinality()) && getValue().equals(
                 otherObj.getValue()
-        )) {
+        )){
             return true;
         }
         return false;

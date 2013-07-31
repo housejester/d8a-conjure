@@ -17,7 +17,7 @@ import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
         @Type(value = StringSpec.class, name = "string")
 }
 )
-public abstract class Spec {
+public abstract class Spec{
     protected int count;
     protected int cardinality;
     protected String type;
@@ -27,18 +27,18 @@ public abstract class Spec {
             int count,
             int cardinality,
             String name
-    ) {
+    ){
         Preconditions.checkArgument(count >= 0, "count must be non negative");
         this.count = count;
         this.cardinality = cardinality;
-        if (name != null) {
+        if(name != null){
             this.name = name;
         }
     }
 
-    public CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException {
-        for (int i = 0; i < count; i++) {
-            nodeList.add(createNewNode(name + i, cardinality));
+    public CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException{
+        for(int i = 0; i < count; i++){
+            nodeList.add(createNewNode(name+i, cardinality));
         }
         return nodeList;
 

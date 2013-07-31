@@ -5,26 +5,26 @@ import java.io.PrintStream;
 /**
  * Created: 4/19/13 10:15 AM
  */
-public class StreamPrinter implements Printer<String> {
+public class StreamPrinter implements Printer<String>{
     private PrintStream out;
 
-    public StreamPrinter(PrintStream out) {
+    public StreamPrinter(PrintStream out){
         this.out = out;
     }
 
     @Override
-    public void print(String message) {
+    public void print(String message){
         out.println(message);
         out.checkError();
     }
 
-    public void close() {
+    public void close(){
         out.flush();
         out.close();
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "StreamPrinter";
     }
 }

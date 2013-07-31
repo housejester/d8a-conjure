@@ -6,11 +6,11 @@ import kafka.producer.ProducerConfig;
 
 import java.util.Properties;
 
-class KafkaPrinter implements Printer<String> {
+class KafkaPrinter implements Printer<String>{
     private final Producer<String, String> producer;
     private final String topic;
 
-    public KafkaPrinter(String zkString, String topic) {
+    public KafkaPrinter(String zkString, String topic){
         this.topic = topic;
         Properties props = new Properties();
         props.put("zk.connect", zkString);
@@ -20,13 +20,13 @@ class KafkaPrinter implements Printer<String> {
     }
 
     @Override
-    public void print(String message) {
-        ProducerData<String, String> data = new ProducerData<String, String>(topic, (String) message);
+    public void print(String message){
+        ProducerData<String, String> data = new ProducerData<String, String>(topic, (String)message);
         producer.send(data);
     }
 
     @Override
-    public String toString() {
-        return "Kafka topic '" + topic + "'";
+    public String toString(){
+        return "Kafka topic '"+topic+"'";
     }
 }
