@@ -15,7 +15,6 @@ public interface Clock {
             }catch(InterruptedException ex){
             }
         }
-
         public String toString(){
             return "System Clock";
         }

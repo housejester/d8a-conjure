@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Map;
 
-public class TimeNode implements ConjureTemplateNode{
+public class TimeNode implements ConjureTemplateNode {
     private final Clock clock;
     private final DateNodeFormatter format;
 
@@ -17,37 +17,37 @@ public class TimeNode implements ConjureTemplateNode{
     public TimeNode(final Clock clock, final String format, final String timeZone){
         this.clock = clock;
         if("millis".equals(format)){
-            this.format = new DateNodeFormatter(){
-                public String print(long millis){
+            this.format = new DateNodeFormatter() {
+                public String print(long millis) {
                     return ""+clock.currentTimeMillis();
                 }
             };
-        } else{
+        }else{
             final DateTimeFormatter f = DateTimeFormat.forPattern(format).withZone(DateTimeZone.forID(timeZone));
-            this.format = new DateNodeFormatter(){
-                public String print(long millis){
+            this.format = new DateNodeFormatter() {
+                public String print(long millis) {
                     return f.print(millis);
                 }
             };
         }
     }
 
-    private interface DateNodeFormatter{
+    private interface DateNodeFormatter {
         public String print(long millis);
     }
 
     @Override
-    public StringBuilder generate(StringBuilder buff){
+    public StringBuilder generate(StringBuilder buff) {
         buff.append(format.print(clock.currentTimeMillis()));
         return buff;
     }
 
-    public static ConjureTemplateNode createNode(Map config, ConjureTemplate template){
+    public static ConjureTemplateNode createNode(Map config, ConjureTemplate template) {
         String format = (String)config.get("format");
         if(format == null){
             format = "millis";
         }
-        String timezone = (String)config.get("timezone");
+        String timezone = (String) config.get("timezone");
         Jitter jitter = createJitter(config, template);
         Clock clock = new JitterClock(template.getClock(), jitter);
         if(timezone != null){
@@ -56,15 +56,15 @@ public class TimeNode implements ConjureTemplateNode{
         return new TimeNode(clock, format);
     }
 
-    private static Jitter createJitter(Map config, ConjureTemplate template){
+    private static Jitter createJitter(Map config, ConjureTemplate template) {
         if(config.containsKey("min") || config.containsKey("max")){
             return MinMaxNode.createNode(config).getMinmax();
         }
         if(config.containsKey("minmaxRef")){
-            final String jitterRefName = (String)config.get("minmaxRef");
-            MinMaxNode minMaxNode = (MinMaxNode)template.getNode(jitterRefName);
-            if(minMaxNode != null){
-                return minMaxNode.getMinmax();
+            final String jitterRefName = (String) config.get("minmaxRef");
+            MinMaxNode minmaxNode = (MinMaxNode) template.getNode(jitterRefName);
+            if(minmaxNode != null){
+                return minmaxNode.getMinmax();
             }
             return new LazyJitter(jitterRefName, template);
         }
@@ -76,15 +76,15 @@ public class TimeNode implements ConjureTemplateNode{
         private ConjureTemplate template;
         private MinMax minmax;
 
-        private LazyJitter(String refName, ConjureTemplate template){
+        private LazyJitter(String refName, ConjureTemplate template) {
             this.refName = refName;
             this.template = template;
         }
 
         @Override
-        public long nextValue(){
+        public long nextValue() {
             if(minmax == null){
-                MinMaxNode myNode = (MinMaxNode)template.getNode(refName);
+                MinMaxNode myNode = (MinMaxNode) template.getNode(refName);
                 if(myNode == null){
                     throw new IllegalArgumentException("Node '"+refName+"' not found in the template.");
                 }

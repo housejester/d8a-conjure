@@ -7,7 +7,7 @@ public class CombineNodeList extends NodeList {
     private static final String DEFAULT_SEPARATOR = "";
     private String separator;
 
-    public CombineNodeList() {
+    public CombineNodeList(){
         this(DEFAULT_SEPARATOR);
     }
 
@@ -16,7 +16,7 @@ public class CombineNodeList extends NodeList {
         add(nodes);
     }
 
-    public CombineNodeList(String separator){
+    public CombineNodeList(String separator) {
         super(true);
         this.separator = separator;
         if(this.separator == null){

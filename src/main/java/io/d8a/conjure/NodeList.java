@@ -1,15 +1,10 @@
 package io.d8a.conjure;
 
-import com.google.common.collect.Lists;
+import java.util.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-public abstract class NodeList implements ConjureTemplateNode{
+public abstract class NodeList implements ConjureTemplateNode {
+    protected List<ConjureTemplateNode> nodes = new ArrayList<ConjureTemplateNode>();
     private boolean allowsGenerateOnEmpty = false;
-    protected List<ConjureTemplateNode> nodes = Lists.newArrayList();
 
     public NodeList(){
         this(false);
@@ -19,8 +14,7 @@ public abstract class NodeList implements ConjureTemplateNode{
         this.allowsGenerateOnEmpty = allowsGenerateOnEmpty;
     }
 
-
-    public void add(ConjureTemplateNode... nodes){
+    public void add(ConjureTemplateNode...nodes){
         add(Arrays.asList(nodes));
     }
 
@@ -28,12 +22,12 @@ public abstract class NodeList implements ConjureTemplateNode{
         this.nodes.addAll(nodes);
     }
 
-    public List<ConjureTemplateNode> getNodes(){
+    public List<ConjureTemplateNode> getNodes() {
         return Collections.unmodifiableList(nodes);
     }
 
     @Override
-    public StringBuilder generate(StringBuilder buff){
+    public StringBuilder generate(StringBuilder buff) {
         if(!nodes.isEmpty()){
             generateNonEmpty(buff);
             return buff;
@@ -42,11 +36,7 @@ public abstract class NodeList implements ConjureTemplateNode{
             generateEmpty(buff);
             return buff;
         }
-        throw new IllegalStateException(
-                "Nodes must first be added to "
-                        +getClass().getSimpleName()
-                        +" before calling generate."
-        );
+        throw new IllegalStateException("Nodes must first be added to "+getClass().getSimpleName()+" before calling generate.");
     }
 
     protected void generateEmpty(StringBuilder buff){
@@ -54,7 +44,7 @@ public abstract class NodeList implements ConjureTemplateNode{
 
     protected abstract void generateNonEmpty(StringBuilder buff);
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return nodes == null || nodes.isEmpty();
     }
 }
