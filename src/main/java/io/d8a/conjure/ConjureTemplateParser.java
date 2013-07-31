@@ -1,12 +1,11 @@
 package io.d8a.conjure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.*;
 import java.util.Map;
 
-public class ConjureTemplateParser {
+public class ConjureTemplateParser{
     ConjureTemplate template;
 
     public ConjureTemplateParser(){
@@ -26,6 +25,14 @@ public class ConjureTemplateParser {
         template.addNodeType("combine", CombineNodeList.class);
         template.addNodeType("weighted", ChooseByWeightNodeList.class);
         template.addNodeType("increment", IncrementNode.class);
+    }
+
+    public ConjureTemplate jsonParse(String filePath) throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File(filePath);
+        CardinalityNodeListBuilder dc = mapper.readValue(file, CardinalityNodeListBuilder.class);
+        template.setNodeList(dc.withClock(template.getClock()).build());
+        return template;
     }
 
     public ConjureTemplate parse(InputStream inputStream) throws IOException {

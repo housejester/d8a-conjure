@@ -7,15 +7,17 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ConjureTemplate {
-    private Map<String, ConjureTemplateNode> nodes;
-    private Map<String, Method> typeRegistry;
-    private Clock clock;
+    private final Map<String, ConjureTemplateNode> nodes;
+    private CardinalityNodeList nodeList;
+    private final Map<String, Method> typeRegistry;
+    private final Clock clock;
     private String refOpenToken = "${";
     private String refCloseToken = "}";
-    private Map<String,String> namedNodeValueCache;
+    private final Map<String, String> namedNodeValueCache;
 
     private static final ObjectMapper json = new ObjectMapper();
-    static{
+
+    static {
         json.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
 
@@ -29,16 +31,18 @@ public class ConjureTemplate {
 
     public ConjureTemplate(Clock clock, String openToken, String closeToken) {
         this.clock = clock;
-        nodes = new HashMap<String, ConjureTemplateNode>();
-        typeRegistry = new HashMap<String, Method>();
+        this.nodes = new HashMap<String, ConjureTemplateNode>();
+        this.typeRegistry = new HashMap<String, Method>();
         this.refOpenToken = openToken;
         this.refCloseToken = closeToken;
         this.namedNodeValueCache = new HashMap<String, String>();
+        this.nodeList = new CardinalityNodeList(clock);
     }
 
     public Clock getClock() {
         return clock;
     }
+
 
     public void addFragment(String name, String template) {
         addNode(name, parseNodes(template));
@@ -67,6 +71,10 @@ public class ConjureTemplate {
         return conjure("sample");
     }
 
+    public Map<String, Object> conjureMapData(Clock clock) {
+        return nodeList.generateEvent();
+    }
+
     public ConjureTemplateNode getNode(String name) {
         return nodes.get(name);
     }
@@ -84,10 +92,18 @@ public class ConjureTemplate {
         final Method creator;
         try {
             creator = lookupCreatorMethod(nodeType);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Could not find creator method for class '"+nodeType+"'.  Needs to have a static method called 'createNode' that takes Map,ConjureTemplate, or just a Map.");
+        }catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(
+                    "Could not find creator method for class '"
+                            +nodeType
+                            +"'.  Needs to have a static method called 'createNode' that takes Map,ConjureTemplate, or just a Map."
+            );
         }
         typeRegistry.put(typeName, creator);
+    }
+
+    public void setNodeList(CardinalityNodeList list) {
+        this.nodeList = list;
     }
 
     private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException {
@@ -181,7 +197,12 @@ public class ConjureTemplate {
         return typeRegistry.get(typeName);
     }
 
-    private ConjureTemplateNode createNodeFromMethod(String typeName, Method creator, Map config, ConjureTemplate generator) {
+    private ConjureTemplateNode createNodeFromMethod(
+            String typeName,
+            Method creator,
+            Map config,
+            ConjureTemplate generator
+    ) {
         Object[] args = new Object[creator.getParameterTypes().length];
         args[0] = config;
         if(args.length > 1){
@@ -209,6 +230,7 @@ public class ConjureTemplate {
     private static class Snippet{
         final int start;
         final int stop;
+
         Snippet(int start, int stop){
             this.start = start;
             this.stop = stop;
