@@ -16,7 +16,7 @@ public class CombineNodeList extends NodeList {
         add(nodes);
     }
 
-    public CombineNodeList(String separator) {
+    public CombineNodeList(String separator){
         super(true);
         this.separator = separator;
         if(this.separator == null){
@@ -25,7 +25,7 @@ public class CombineNodeList extends NodeList {
     }
 
     @Override
-    protected void generateNonEmpty(StringBuilder buff) {
+    protected void generateNonEmpty(StringBuilder buff){
         boolean first = true;
         for(ConjureTemplateNode node : nodes){
             if(first){

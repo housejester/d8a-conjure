@@ -48,7 +48,7 @@ public class ConjureTemplate {
         addNode(name, parseNodes(template));
     }
 
-    public ConjureTemplateNode parseNodes(String text) {
+    public ConjureTemplateNode parseNodes(String text){
         List<ConjureTemplateNode> nodes = compileToNodeList(text);
         if(nodes.size() == 1){
             return nodes.get(0);
@@ -90,9 +90,9 @@ public class ConjureTemplate {
 
     public void addNodeType(final String typeName, Class nodeType) {
         final Method creator;
-        try{
+        try {
             creator = lookupCreatorMethod(nodeType);
-        }catch(NoSuchMethodException e){
+        }catch (NoSuchMethodException e) {
             throw new IllegalArgumentException(
                     "Could not find creator method for class '"
                             +nodeType
@@ -107,14 +107,14 @@ public class ConjureTemplate {
     }
 
     private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException {
-        try{
+        try {
             return nodeType.getMethod("createNode", Map.class, ConjureTemplate.class);
-        }catch(NoSuchMethodException e){
+        } catch (NoSuchMethodException e) {
         }
         return nodeType.getMethod("createNode", Map.class);
     }
 
-    public Map parseFirstConfig(String text) {
+    public Map parseFirstConfig(String text){
         Snippet refSnip = findRef(text);
         if(refSnip == null){
             return Collections.emptyMap();
@@ -130,7 +130,7 @@ public class ConjureTemplate {
     private List<ConjureTemplateNode> compileToNodeList(String text) {
         List<ConjureTemplateNode> nodes = new ArrayList<ConjureTemplateNode>();
         Snippet refSnip = findRef(text);
-        while(refSnip != null) {
+        while(refSnip != null){
             if(refSnip.start > 0){
                 nodes.add(new BareTextNode(text.substring(0, refSnip.start)));
             }
@@ -167,7 +167,7 @@ public class ConjureTemplate {
             node = createNodeFromMethod(typeName, nodeCreator, config, this);
         }else if(config.containsKey("ref")){
             node = new LazyRefNode((String)config.get("ref"), this);
-        }else {
+        } else {
             throw new IllegalArgumentException("Must specify either 'type' or 'ref'.");
         }
         String name = (String)config.get("name");
@@ -188,9 +188,9 @@ public class ConjureTemplate {
             return nodeCreator;
         }
         Class clazz;
-        try{
+        try {
             clazz = Class.forName(typeName);
-        }catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Unknown sample node nodeCreator '"+typeName+"'.");
         }
         addNodeType(typeName, clazz);
@@ -210,7 +210,7 @@ public class ConjureTemplate {
         }
         try {
             return (ConjureTemplateNode)creator.invoke(null, args);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Problem creating the '"+typeName+"' node.", e);
         }
     }
@@ -227,11 +227,11 @@ public class ConjureTemplate {
         return new Snippet(refOpen, refClose);
     }
 
-    private static class Snippet {
+    private static class Snippet{
         final int start;
         final int stop;
 
-        Snippet(int start, int stop) {
+        Snippet(int start, int stop){
             this.start = start;
             this.stop = stop;
         }

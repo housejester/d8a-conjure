@@ -19,7 +19,7 @@ public class ChooseByWeightNodeList extends NodeList{
     private List<Integer> weightTiers = new ArrayList<Integer>();
     private int sumOfWeights = 0;
 
-    public void add(ConjureTemplateNode node, int weight) {
+    public void add(ConjureTemplateNode node, int weight){
         add(new WeightedNode(node, weight));
     }
 
@@ -41,7 +41,7 @@ public class ChooseByWeightNodeList extends NodeList{
 
     private void updateWeights() {
         if(nodes.size() != weightTiers.size()){
-            for(int i= weightTiers.size(); i< nodes.size(); i++){
+            for(int i= weightTiers.size(); i<nodes.size(); i++){
                 sumOfWeights += getNodeWeight(nodes.get(i));
                 weightTiers.add(sumOfWeights);
             }

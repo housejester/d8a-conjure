@@ -1,6 +1,6 @@
 package io.d8a.conjure;
 
-public interface Clock{
+public interface Clock {
     public static final Clock SYSTEM_CLOCK = new Clock(){
 
         @Override
@@ -16,12 +16,10 @@ public interface Clock{
             }
         }
 
-        public String toString() {
+        public String toString(){
             return "System Clock";
         }
     };
-
     long currentTimeMillis();
-
     void sleep(long millis);
 }
