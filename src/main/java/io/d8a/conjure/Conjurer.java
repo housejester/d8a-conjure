@@ -242,9 +242,9 @@ public class Conjurer implements Runnable {
 
 
     public static Printer nonePrinter() {
-        return new Printer() {
+        return new Printer<String>() {
             @Override
-            public void print(Object message) {
+            public void print(String message) {
             }
 
             public String toString() {
