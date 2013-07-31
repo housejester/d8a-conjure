@@ -6,7 +6,9 @@ import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
+/**
+ *  CardinalityNodeList is analogous to NodeList, except it only holds CardinalityNodes.
+ */
 public class CardinalityNodeList implements ConjureTemplateNode{
     protected List<CardinalityNode> cardinalityNodes = Lists.newArrayList();
     private Map<String, Object> event = Maps.newHashMap();
@@ -35,6 +37,10 @@ public class CardinalityNodeList implements ConjureTemplateNode{
         return buff.append(generateEvent().toString());
     }
 
+    /**
+     * calls getValue() on each node in cardinalityNodes to generate an event.
+     * @return - a new event composed of the values of each of the nodes in cardinalityNodes
+     */
     public Map<String, Object> generateEvent(){
         for(CardinalityNode variable : cardinalityNodes){
             event.put(variable.getName(), variable.getValue());

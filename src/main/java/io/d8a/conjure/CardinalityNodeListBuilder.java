@@ -2,6 +2,7 @@ package io.d8a.conjure;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class CardinalityNodeListBuilder{
     }
 
     public CardinalityNodeList build() throws IllegalArgumentException{
-        CardinalityNodeList nodeList = new CardinalityNodeList(clock);
+        List<CardinalityNode> nodesToAdd = Lists.newArrayList();
         for(Spec spec : specList){
-            spec.addNodes(nodeList);
+            nodesToAdd.addAll(spec.getNodesToAdd());
         }
-        return nodeList;
+        return new CardinalityNodeList(nodesToAdd, clock);
     }
 
     public CardinalityNodeListBuilder withClock(Clock clock){

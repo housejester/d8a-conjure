@@ -216,7 +216,7 @@ public class Conjurer implements Runnable {
             }
             Object event;
             if(customSchema){
-                event = template.conjureMapData(clock);
+                event = template.conjureMapData();
             }else{
                 if(linesIterator == null || !linesIterator.hasNext()){
                     linesIterator = conjureNextBatch();

@@ -3,6 +3,9 @@ package io.d8a.conjure;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
@@ -36,11 +39,12 @@ public abstract class Spec{
         }
     }
 
-    public CardinalityNodeList addNodes(CardinalityNodeList nodeList) throws IllegalArgumentException{
+    public List<CardinalityNode> getNodesToAdd() throws IllegalArgumentException{
+        List<CardinalityNode> nodesToAdd = Lists.newArrayList();
         for(int i = 0; i < count; i++){
-            nodeList.add(createNewNode(name+i, cardinality));
+            nodesToAdd.add(createNewNode(name+i, cardinality));
         }
-        return nodeList;
+        return nodesToAdd;
 
     }
 

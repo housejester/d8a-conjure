@@ -8,7 +8,7 @@ import java.util.*;
 
 public class ConjureTemplate {
     private final Map<String, ConjureTemplateNode> nodes;
-    private CardinalityNodeList nodeList;
+    private final CardinalityNodeList nodeList;
     private final Map<String, Method> typeRegistry;
     private final Clock clock;
     private String refOpenToken = "${";
@@ -26,17 +26,22 @@ public class ConjureTemplate {
     }
 
     public ConjureTemplate(Clock clock) {
-        this(clock, "${", "}");
+        this(clock, new CardinalityNodeList(clock));
     }
 
-    public ConjureTemplate(Clock clock, String openToken, String closeToken) {
+    public ConjureTemplate(Clock clock, CardinalityNodeList nodeList)
+    {
+        this(clock, "${", "}", nodeList);
+    }
+
+    public ConjureTemplate(Clock clock, String openToken, String closeToken, CardinalityNodeList nodeList) {
         this.clock = clock;
         this.nodes = new HashMap<String, ConjureTemplateNode>();
         this.typeRegistry = new HashMap<String, Method>();
         this.refOpenToken = openToken;
         this.refCloseToken = closeToken;
         this.namedNodeValueCache = new HashMap<String, String>();
-        this.nodeList = new CardinalityNodeList(clock);
+        this.nodeList = nodeList;
     }
 
     public Clock getClock() {
@@ -71,7 +76,7 @@ public class ConjureTemplate {
         return conjure("sample");
     }
 
-    public Map<String, Object> conjureMapData(Clock clock) {
+    public Map<String, Object> conjureMapData() {
         return nodeList.generateEvent();
     }
 
@@ -94,16 +99,9 @@ public class ConjureTemplate {
             creator = lookupCreatorMethod(nodeType);
         }catch (NoSuchMethodException e) {
             throw new IllegalArgumentException(
-                    "Could not find creator method for class '"
-                            +nodeType
-                            +"'.  Needs to have a static method called 'createNode' that takes Map,ConjureTemplate, or just a Map."
-            );
+                    "Could not find creator method for class '"+nodeType+"'.  Needs to have a static method called 'createNode' that takes Map,ConjureTemplate, or just a Map.");
         }
         typeRegistry.put(typeName, creator);
-    }
-
-    public void setNodeList(CardinalityNodeList list) {
-        this.nodeList = list;
     }
 
     private Method lookupCreatorMethod(Class nodeType) throws NoSuchMethodException {

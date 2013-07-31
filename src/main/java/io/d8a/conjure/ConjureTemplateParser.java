@@ -2,18 +2,24 @@ package io.d8a.conjure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 public class ConjureTemplateParser{
-    ConjureTemplate template;
+    private final ConjureTemplate template;
+    private final Clock clock;
 
     public ConjureTemplateParser(){
         this(Clock.SYSTEM_CLOCK);
     }
 
     public ConjureTemplateParser(Clock clock) {
-        template = new ConjureTemplate(clock);
+        this.clock=clock;
+        this.template = new ConjureTemplate(clock);
         registerStandardTypes();
     }
 
@@ -30,9 +36,8 @@ public class ConjureTemplateParser{
     public ConjureTemplate jsonParse(String filePath) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         File file = new File(filePath);
-        CardinalityNodeListBuilder dc = mapper.readValue(file, CardinalityNodeListBuilder.class);
-        template.setNodeList(dc.withClock(template.getClock()).build());
-        return template;
+        CardinalityNodeListBuilder builder = mapper.readValue(file, CardinalityNodeListBuilder.class);
+        return new ConjureTemplate(clock, builder.withClock(template.getClock()).build());
     }
 
     public ConjureTemplate parse(InputStream inputStream) throws IOException {

@@ -3,6 +3,12 @@ package io.d8a.conjure;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * A cardinality node is a conjure template node that contains a cardinality, name, and a counter. It
+ * generates a different value on each call of getValue().
+ * This makes sure it outputs possible values from 0 to cardinality-1.
+ * @param <T>  - This is the type of value the node will output on getValue().
+ */
 public abstract class CardinalityNode<T> implements ConjureTemplateNode{
     private final Counter<T> counter;
     private final String name;
