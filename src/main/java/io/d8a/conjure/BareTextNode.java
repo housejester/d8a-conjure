@@ -1,9 +1,9 @@
 package io.d8a.conjure;
 
-public class BareTextNode implements ConjureTemplateNode{
+public class BareTextNode implements ConjureTemplateNode {
     private String text;
 
-    public BareTextNode(String text){
+    public BareTextNode(String text) {
         this.text = text;
     }
 

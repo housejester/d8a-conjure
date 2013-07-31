@@ -3,7 +3,7 @@ package io.d8a.conjure;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseInOrderNodeList extends NodeList{
+public class ChooseInOrderNodeList extends NodeList {
     private int next = 0;
 
     @Override
@@ -14,7 +14,7 @@ public class ChooseInOrderNodeList extends NodeList{
         nodes.get(next++).generate(buff);
     }
 
-    public static ChooseInOrderNodeList createNode(Map config, ConjureTemplate template){
+    public static ChooseInOrderNodeList createNode(Map config, ConjureTemplate template) {
         ChooseInOrderNodeList nodes = new ChooseInOrderNodeList();
         List list = (List)config.get("list");
         if(list != null){
