@@ -1,2 +1,15 @@
+dist
 target
 dependency-reduced-pom.xml
+*.iml
+*.ipr
+*.iws
+*.tar.gz
+*.swp
+*.swo
+.classpath
+.idea
+.project
+.settings/
+*.log
+*.DS_Store

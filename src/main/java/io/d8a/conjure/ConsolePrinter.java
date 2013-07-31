@@ -6,7 +6,7 @@ public class ConsolePrinter extends StreamPrinter{
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "ConsolePrinter";
     }
 }

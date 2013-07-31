@@ -6,7 +6,7 @@ import kafka.producer.ProducerConfig;
 
 import java.util.Properties;
 
-class KafkaPrinter implements Printer {
+class KafkaPrinter implements Printer<String>{
     private final Producer<String, String> producer;
     private final String topic;
 
@@ -20,8 +20,8 @@ class KafkaPrinter implements Printer {
     }
 
     @Override
-    public void print(String message) {
-        ProducerData<String, String> data = new ProducerData<String, String>(topic, message);
+    public void print(String message){
+        ProducerData<String, String> data = new ProducerData<String, String>(topic, (String)message);
         producer.send(data);
     }
 
