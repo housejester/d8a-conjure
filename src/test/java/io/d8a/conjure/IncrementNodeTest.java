@@ -55,4 +55,14 @@ public class IncrementNodeTest {
         assertEquals(secondValue, -4);
     }
 
+    public void rollsNumbersAfterSpecifiedNumberOfSteps(){
+        samples.addFragment("sample", "${type:\"increment\", value:42, rollAfterSteps:2}");
+        long firstValue = Long.valueOf(samples.conjure());
+        assertEquals(firstValue, 42);
+        long secondValue = Long.valueOf(samples.conjure());
+        assertEquals(secondValue, 43);
+        long thirdValue = Long.valueOf(samples.conjure());
+        assertEquals(thirdValue, 42);
+    }
+
 }
