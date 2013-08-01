@@ -3,7 +3,7 @@ package io.d8a.conjure;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 @Test
 public class IncrementNodeTest {
@@ -65,4 +65,16 @@ public class IncrementNodeTest {
         assertEquals(thirdValue, 42);
     }
 
+    public void generatesIncrementingValuesAfterRoll(){
+        samples.addFragment("sample", "${type:\"increment\", value:42, rollAfterSteps:2}");
+        assertEquals(conjureNext(), 42);
+        assertEquals(conjureNext(), 43);
+
+        assertEquals(conjureNext(), 42);
+        assertEquals(conjureNext(), 43);
+    }
+
+    private long conjureNext() {
+        return Long.valueOf(samples.conjure());
+    }
 }

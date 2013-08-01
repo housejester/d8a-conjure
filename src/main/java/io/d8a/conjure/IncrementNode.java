@@ -11,7 +11,7 @@ public class IncrementNode implements ConjureTemplateNode {
     private long initialValue;
     private long value;
     private long step;
-    private long stepCount;
+    private long stepsSinceRoll;
 
     public IncrementNode(long value, long step) {
         this(value, step, Long.MAX_VALUE);
@@ -26,8 +26,9 @@ public class IncrementNode implements ConjureTemplateNode {
 
     @Override
     public StringBuilder generate(StringBuilder buff) {
-        if(++stepCount > rollAfterSteps){
+        if(++stepsSinceRoll > rollAfterSteps){
             value = initialValue;
+            stepsSinceRoll = 0;
         }
         long currentValue = value;
         value += step;
