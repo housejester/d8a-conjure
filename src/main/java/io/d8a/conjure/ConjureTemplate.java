@@ -29,9 +29,12 @@ public class ConjureTemplate {
         this(clock, new CardinalityNodeList(clock));
     }
 
-    public ConjureTemplate(Clock clock, CardinalityNodeList nodeList)
-    {
+    public ConjureTemplate(Clock clock, CardinalityNodeList nodeList) {
         this(clock, "${", "}", nodeList);
+    }
+
+    public ConjureTemplate(Clock clock, String openToken, String closeToken) {
+        this(clock, openToken, closeToken, new CardinalityNodeList(clock));
     }
 
     public ConjureTemplate(Clock clock, String openToken, String closeToken, CardinalityNodeList nodeList) {

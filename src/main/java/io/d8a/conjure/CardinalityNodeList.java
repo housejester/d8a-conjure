@@ -3,6 +3,7 @@ package io.d8a.conjure;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,12 @@ public class CardinalityNodeList implements ConjureTemplateNode{
     }
 
 
-    public void add(CardinalityNode node){
-        cardinalityNodes.add(node);
+    public void add(Collection<CardinalityNode> nodes){
+        cardinalityNodes.addAll(nodes);
+    }
+
+    public void add(CardinalityNode...nodes){
+        Collections.addAll(cardinalityNodes, nodes);
     }
 
     public List<CardinalityNode> getNodes(){

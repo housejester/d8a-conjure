@@ -25,7 +25,7 @@ public class Conjurer implements Runnable {
     private String filePath;
     private long count = 0;
     private ConjureTemplate template;
-    private boolean customSchema = true;
+    private boolean customSchema = false;
     private final Thread thread = new Thread(this);
 
 
@@ -38,20 +38,6 @@ public class Conjurer implements Runnable {
     }
 
     public Conjurer(long startTime, long stopTime, Printer printer, int linesPerSec, long maxLines, String filePath) {
-        this(startTime, stopTime, printer, linesPerSec, maxLines, filePath, true);
-    }
-
-
-    public Conjurer(
-            long startTime,
-            long stopTime,
-            Printer printer,
-            int linesPerSec,
-            long maxLines,
-            String filePath,
-            boolean customCardinalityMode
-    ) {
-        this.customSchema = customCardinalityMode;
         this.stopTime = stopTime;
         this.printer = printer;
         this.linesPerSec = linesPerSec;
@@ -65,9 +51,11 @@ public class Conjurer implements Runnable {
         ConjureTemplateParser parser = new ConjureTemplateParser(clock);
         try {
             if(FilenameUtils.getExtension(filePath).equals("json")){
+                this.customSchema = true;
                 this.template = parser.jsonParse(filePath);
+            } else {
+                this.template = parser.parse(new FileInputStream(filePath));
             }
-            this.template = parser.parse(new FileInputStream(filePath));
         }catch (IOException e) {
             throw new IllegalArgumentException("Could not create ConjureTemplate from " + filePath, e);
         }
@@ -351,16 +339,9 @@ public class Conjurer implements Runnable {
             return this;
         }
 
-        public Builder withCustomSchema(Boolean customSchema) {
-            if(customSchema != null){
-                this.customSchema = customSchema;
-            }
-            return this;
-        }
-
         public Conjurer build() {
             Preconditions.checkArgument(filePath != null, "Must specify filepath");
-            return new Conjurer(startTime, stopTime, printer, linesPerSec, maxLines, filePath, customSchema);
+            return new Conjurer(startTime, stopTime, printer, linesPerSec, maxLines, filePath);
         }
     }
 
