@@ -16,9 +16,9 @@ public class SpecTest
 
   @Test
   public void intSpecTest(){
-
     CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     nodeList.add(intSpec.getNodesToAdd());
+
     CardinalityNodeList expectedList = new CardinalityNodeList(clock);
     for (int i=0;i<numColumns;i++){
       expectedList.add(new IntCardinalityNode(name + i, cardinality));
@@ -27,7 +27,6 @@ public class SpecTest
   }
   @Test
   public void doubleSpecTest(){
-
     CardinalityNodeList nodeList = new CardinalityNodeList(clock);
     nodeList.add(doubleSpec.getNodesToAdd());
     CardinalityNodeList expectedList = new CardinalityNodeList(clock);
