@@ -105,9 +105,9 @@
         </repository>
     </distributionManagement>
     <scm>
-        <connection>scm:git:ssh://git@github.com/housejester/d8a-conjure.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/housejester/d8a-conjure.git</developerConnection>
-        <url>http://www.github.com/housejester/d8a-conjure</url>
+        <connection>scm:git:ssh://git@github.com/metamx/d8a-conjure.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/metamx/d8a-conjure.git</developerConnection>
+        <url>http://www.github.com/metamx/d8a-conjure</url>
     </scm>
 </project>
 
