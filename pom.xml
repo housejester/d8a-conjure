@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.d8a</groupId>
     <artifactId>d8a-conjure</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -105,9 +105,9 @@
         </repository>
     </distributionManagement>
     <scm>
-        <connection>scm:git:ssh://git@github.com/metamx/druid.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/metamx/druid.git</developerConnection>
-        <url>http://www.github.com/metamx/druid</url>
+        <connection>scm:git:ssh://git@github.com/housejester/d8a-conjure.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/housejester/d8a-conjure.git</developerConnection>
+        <url>http://www.github.com/housejester/d8a-conjure</url>
     </scm>
 </project>
 
