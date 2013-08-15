@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.d8a</groupId>
     <artifactId>d8a-conjure</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-  <build>
+    <version>1.4-SNAPSHOT</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+	    <version>1.7.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -97,4 +97,17 @@
             <url>https://metamx.artifactoryonline.com/metamx/pub-libs-releases-local</url>
         </repository>
     </repositories>
+    <distributionManagement>
+        <repository>
+            <id>central-local</id>
+            <name>Central</name>
+            <url>http://metamx.artifactoryonline.com/metamx/libs-releases-local</url>
+        </repository>
+    </distributionManagement>
+    <scm>
+        <connection>scm:git:ssh://git@github.com/metamx/d8a-conjure.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/metamx/d8a-conjure.git</developerConnection>
+        <url>http://www.github.com/metamx/d8a-conjure</url>
+    </scm>
 </project>
+
